@@ -35,6 +35,7 @@ nav button{border:0;background:none;padding:0;border-radius:18px;font:inherit;fo
 nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 nav button[aria-selected="true"]{color:var(--red-t);background:var(--red-soft);font-weight:600}
 button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.intro{margin:18px 0 0;font-size:16px;font-weight:500;line-height:1.5;text-align:center}
 .mute{color:var(--mute);font-size:13.5px;margin:12px 0 0}
 h2{font-size:18px;margin:26px 0 0;font-weight:600}
 .stack{display:grid;gap:10px;margin-top:14px}
@@ -367,6 +368,7 @@ function rIdol(v){
  if(gSeg==='nilai')gNilai(body);else gRank(body);
 }
 function gNilai(c){
+ c.appendChild(el('p','intro','Siapakah performer terbaik di Power Night 2 malam ini? Beri nilai untuk Grow Idol Anda!'));
  if(!D.open){c.appendChild(el('div','msg err','Penilaian sedang ditutup panitia.'));return}
  const done=voted();
  const lab=el('label','l','Penilaian untuk siapa');lab.htmlFor='sg';c.appendChild(lab);
