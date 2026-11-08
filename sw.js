@@ -1,4 +1,4 @@
-const CACHE = 'pn2-v14';
+const CACHE = 'pn2-v15';
 const SHELL = ['./', 'index.html', 'config.js', 'hero.jpg', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => {
