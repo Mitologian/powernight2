@@ -103,6 +103,13 @@ label.l{display:block;font-size:12px;letter-spacing:.08em;text-transform:upperca
 .ov{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:20;display:grid;place-items:center;padding:20px}
 .mod{background:#fff;border-radius:16px;padding:22px;width:min(380px,100%);box-shadow:0 10px 40px rgba(0,0,0,.25)}
 .mrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.mrow .go,.mrow .ref{margin-top:0;min-height:50px;font-weight:600}
+.rh.c-orange{background:var(--orange-bg);color:var(--orange-d)}.rh.c-pink{background:var(--pink-bg);color:var(--pink-d)}.rh.c-indigo{background:#e8eafd;color:#2c3590}.rh.c-gray{background:#f0f0f0;color:#555}
+.ic.c-indigo{background:#e8eafd;color:#2c3590}
+.rh b,.rh small{color:inherit}.rh b{color:var(--fg)}
+.map{width:100%;height:auto;display:block;margin-top:10px;border:1px solid var(--line);border-radius:14px;background:#fcfcfc}
+.mapt{cursor:pointer;outline:none}.mapt:focus-visible rect,.mapt:focus-visible circle,.mapt:focus-visible ellipse{stroke:#1a1a1a;stroke-width:3}
+.legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:16px;font-size:12.5px;color:#444}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.zchips{display:flex;gap:8px;margin-top:6px}.zchips button{border:1px solid #cfcfcf;background:#fff;border-radius:999px;padding:8px 16px;font:inherit;font-size:14px;font-weight:500;cursor:pointer;color:var(--fg)}
 </style></head>
 <body>
 <header class="banner"><img src="hero.jpg" alt="Power Night 2, BNI Grow, Driam Riverside Ciwidey" width="1000" height="460" fetchpriority="high"><h1>Power Night 2</h1><div class="sub" id="sub">Rundown</div></header>
@@ -333,28 +340,132 @@ function gRank(c){
 }
 
 /* KAMAR */
-const TYPES=[['Deluxe Room','blue'],['Deluxe Riverview','teal'],['Family Riverview','amber'],['Family Barrack','orange'],['Driam Suite','purple'],['Glamping','green'],['Deluxe Luxcamp','pink']];
+const TYPES=[['Deluxe Room','blue'],['Deluxe Riverview','teal'],['Family Room','orange'],['Family Barrack','orange'],['Family Riverview','purple'],['Driam Suite','amber'],['Glamping','green'],['Deluxe Luxcamp','pink'],['Family Luxcamp Blue','indigo'],['Family Luxcamp Orange','indigo']];
+const PAL={blue:['#4b8bd6','#e6eefc','#1f4fa8'],teal:['#2aa39a','#e3f4f4','#0b6466'],orange:['#e8833a','#fde9e0','#a64b1a'],purple:['#7c4dc4','#f1eafb','#5b34a0'],amber:['#e6a81a','#fff3d6','#7a5a00'],green:['#2e9b5f','#e4f4ea','#1e6b40'],pink:['#d9568f','#fce6f0','#a61e5a'],indigo:['#5560d8','#e8eafd','#2c3590'],gray:['#9a9a9a','#f0f0f0','#555']};
+const tcol=t=>(TYPES.find(x=>x[0]===t)||[0,'gray'])[1];
+const tlabel=t=>String(t).replace(/Riverview/g,'River View');
+let kmSeg='daftar';
+const NS='http://www.w3.org/2000/svg';
+function sv(tag,at,par,txt){const e=document.createElementNS(NS,tag);for(const k in at)e.setAttribute(k,at[k]);if(txt!==undefined)e.textContent=txt;if(par)par.appendChild(e);return e}
+/* Denah. Koordinat resort = denah venue (x barat-timur, y utara-selatan), diputar 90 derajat agar memanjang ke bawah */
+const RES=[['120',305,312,33,28,'Deluxe Riverview'],['118',341,326,33,26,'Family Riverview'],['116',376,326,33,26,'Deluxe Riverview'],['112',411,326,33,26,'Deluxe Riverview'],['110',446,326,33,26,'Deluxe Riverview'],['108',481,326,33,26,'Deluxe Riverview'],['106',516,326,33,26,'Deluxe Riverview'],['102',551,326,33,26,'Deluxe Riverview'],
+['122',270,339,33,38,'Deluxe Riverview'],['126',235,374,33,29,'Deluxe Riverview'],['128',200,374,33,29,'Deluxe Riverview'],
+['208',96,347,34,26,'Deluxe Riverview',2],['206',131,347,34,26,'Deluxe Riverview',2],['202',166,347,33,26,'Deluxe Riverview',2],
+['136',96,387,34,26,'Family Riverview'],['132',131,387,34,26,'Deluxe Riverview'],['130',166,387,33,26,'Deluxe Riverview'],
+['210',16,437,34,79,'Driam Suite',2],['138',51,437,34,79,'Family Riverview',2],['121',234,437,34,79,'Family Barrack'],
+['119',270,437,34,26,'Deluxe Room'],['117',305,437,34,26,'Deluxe Room'],['115',340,437,33,26,'Deluxe Room'],['111',373,403,31,27,'Deluxe Room'],
+['109',409,437,34,26,'Deluxe Room'],['107',444,437,33,26,'Family Room'],['105',478,437,34,26,'Deluxe Room'],['103',513,437,33,26,'Deluxe Room'],['101',547,437,33,26,'Deluxe Room']];
+const GLM=[['301','JATI'],['302','MERANTI'],['303','TREMBESI'],['305','MAHONI']];
+const LUX=[['501',29,50,16,'Deluxe Luxcamp'],['502',65,39,16,'Deluxe Luxcamp'],['503',98,43,16,'Deluxe Luxcamp'],['506',158,32,22,'Family Luxcamp Orange',17],['505',85,92,30,'Family Luxcamp Blue',21],['601',175,118,16,'Deluxe Luxcamp'],['602',220,126,16,'Deluxe Luxcamp'],['603',305,160,16,'Deluxe Luxcamp'],['605',272,197,16,'Deluxe Luxcamp'],['606',248,227,16,'Deluxe Luxcamp'],['607',222,257,16,'Deluxe Luxcamp']];
+function tile(par,no,shape,room,def,hit,dim,onTap,extra){
+ const type=room?room.type:def,c=PAL[tcol(type)],occ=room&&room.names.length>0;
+ const g=sv('g',{class:'mapt',tabindex:0,role:'button','aria-label':'Kamar '+no+(occ?', terisi':', kosong')},par);g.dataset.no=no;
+ const st=occ?{fill:c[0],stroke:c[0]}:{fill:c[1],stroke:c[0],'stroke-dasharray':'4 3'};
+ const sh=sv(shape.t,Object.assign({'stroke-width':1.5},st,shape.a),g);
+ if(hit){sh.setAttribute('stroke','#f2a900');sh.setAttribute('stroke-width','4');sh.setAttribute('stroke-dasharray','none')}
+ const tc=occ?'#fff':c[2];
+ sv('text',{x:shape.cx,y:shape.cy+(extra?-3:4),'text-anchor':'middle','font-size':12,'font-weight':600,fill:tc,'pointer-events':'none'},g,no);
+ if(extra)sv('text',{x:shape.cx,y:shape.cy+9,'text-anchor':'middle','font-size':8.5,'font-weight':600,fill:tc,'pointer-events':'none','letter-spacing':'.04em'},g,extra);
+ if(dim)g.setAttribute('opacity','.3');
+ g.onclick=()=>onTap(no,room,type);g.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();onTap(no,room,type)}};
+ return g;
+}
+function roomSheet(no,room,type){
+ const ov=el('div','ov'),bx=el('div','mod');ov.appendChild(bx);
+ const col=tcol(type),c=PAL[col];
+ const h=el('div','rh c-'+col);h.style.borderRadius='10px';h.appendChild(el('b','','Kamar '+no));h.appendChild(el('small','',tlabel(type)));bx.appendChild(h);
+ const n=el('div','rn');n.style.padding='12px 0 0';
+ if(room&&room.names.length){room.names.forEach(x=>n.appendChild(el('div','nm',x)));if(room.family)n.appendChild(el('div','nm fam','Keluarga ('+room.family+' orang)'))}
+ else n.appendChild(el('p','mute','Belum ada penghuni terdaftar.'));
+ bx.appendChild(n);
+ const cl=el('button','go','Tutup');cl.type='button';cl.onclick=()=>ov.remove();bx.appendChild(cl);
+ ov.onclick=e=>{if(e.target===ov)ov.remove()};document.body.appendChild(ov);
+}
+function drawDenah(box,nd){
+ const by={};K.forEach(r=>by[r.no]=r);
+ const match=r=>nd&&(r.no+' '+r.names.join(' ')).toLowerCase().includes(nd);
+ const hits=new Set(K.filter(match).map(r=>r.no)),anyHit=hits.size>0;
+ const tap=(no,room,type)=>roomSheet(no,room,type);
+ // legend
+ const lg=el('div','legend');TYPES.forEach(([t,c])=>{const s=el('span');const i=el('i');i.style.background=PAL[c][0];s.appendChild(i);s.appendChild(document.createTextNode(tlabel(t)));lg.appendChild(s)});
+ const s2=el('span');const i2=el('i');i2.style.cssText='background:#fff;border:1.5px dashed #888';s2.appendChild(i2);s2.appendChild(document.createTextNode('Kosong'));lg.appendChild(s2);box.appendChild(lg);
+ box.appendChild(el('p','mute','Tap kamar untuk melihat penghuni. Angka 2 di pojok berarti lantai 2.'));
+ const chips=el('div','zchips');const secs={};
+ [['res','Resort'],['glm','Glamping'],['lux','Luxcamp']].forEach(([k,t])=>{const b=el('button','',t);b.type='button';b.onclick=()=>secs[k]&&secs[k].scrollIntoView({behavior:'smooth',block:'start'});chips.appendChild(b)});box.appendChild(chips);
+ const S=1.45,Y0=300,XM=700,PX=10,W=340;
+ const R=(x,y,w,h)=>({x:(y-Y0)*S+PX,y:(XM-(x+w))*S+6,w:h*S,h:w*S});
+ const Pt=(x,y)=>[(y-Y0)*S+PX,(XM-x)*S+6];
+ /* RESORT */
+ let h=el('h2','','Resort');h.style.marginTop='24px';box.appendChild(h);secs.res=h;
+ box.appendChild(el('p','mute','Lobby di atas. Sayap kamar memanjang ke bawah (barat).'));
+ const H1=Math.round((XM-16)*S+16);
+ const s1=sv('svg',{viewBox:'0 0 '+W+' '+H1,class:'map',role:'group','aria-label':'Denah Resort'});box.appendChild(s1);
+ // koridor
+ const cor=[[604,392],[298,392],[298,424],[100,424]].map(p=>Pt(p[0],p[1]));
+ sv('polyline',{points:cor.map(p=>p.join(',')).join(' '),fill:'none',stroke:'#e9e9e9','stroke-width':30,'stroke-linejoin':'round','stroke-linecap':'butt'},s1);
+ // lobby, meeting, entrance
+ const dec=(x,y,w,h,fill,stk,label,dash)=>{const r=R(x,y,w,h);sv('rect',{x:r.x,y:r.y,width:r.w,height:r.h,rx:6,fill:fill,stroke:stk,'stroke-width':1.2,'stroke-dasharray':dash||'none'},s1);if(label){const ls=label.split('|');ls.forEach((t,i)=>sv('text',{x:r.x+r.w/2,y:r.y+r.h/2+4+(i-(ls.length-1)/2)*13,'text-anchor':'middle','font-size':10.5,'font-weight':600,fill:'#444','letter-spacing':'.06em','pointer-events':'none'},s1,t))}};
+ dec(604,318,86,46,'#fff','#bbb','MEETING|ROOM');
+ dec(604,368,86,96,'#f6f6f6','#bbb','LOBBY');
+ dec(112,455,98,42,'#2f46d8','#1c2fa8','KOLAM');s1.lastChild.setAttribute('fill','#fff');
+ const e=R(604,470,86,36);sv('text',{x:e.x+e.w/2,y:e.y+e.h/2-2,'text-anchor':'middle','font-size':11,'font-weight':700,fill:'#c8102e','letter-spacing':'.08em'},s1,'▲ ENTRANCE');
+ const wa=R(690,300,10,10);sv('text',{x:W/2,y:14,'text-anchor':'middle','font-size':11,'font-weight':700,fill:'#555','letter-spacing':'.08em'},s1,'▲ WISATA ALAM, GLAMPING, LUXCAMP');
+ RES.forEach(([no,x,y,w,h2,def,fl])=>{const r=R(x,y,w,h2);const room=by[no];const hit=hits.has(no);
+  tile(s1,no,{t:'rect',a:{x:r.x,y:r.y,width:r.w,height:r.h,rx:6},cx:r.x+r.w/2,cy:r.y+r.h/2},room,def,hit,anyHit&&!hit,tap);
+  if(fl){sv('circle',{cx:r.x+r.w-7,cy:r.y+7,r:6,fill:'#fff',stroke:'#444','stroke-width':1},s1);sv('text',{x:r.x+r.w-7,y:r.y+10.5,'text-anchor':'middle','font-size':8.5,'font-weight':700,fill:'#222','pointer-events':'none'},s1,'2')}
+ });
+ /* GLAMPING */
+ h=el('h2','','Glamping');h.style.marginTop='30px';box.appendChild(h);secs.glm=h;
+ const s2g=sv('svg',{viewBox:'0 0 340 150',class:'map',role:'group','aria-label':'Denah Glamping'});box.appendChild(s2g);
+ sv('rect',{x:9,y:20,width:58,height:110,rx:8,fill:'#f4f4f4',stroke:'#bbb','stroke-dasharray':'4 3'},s2g);
+ sv('text',{x:38,y:72,'text-anchor':'middle','font-size':10,'font-weight':600,fill:'#555','letter-spacing':'.04em'},s2g,'PLAY');sv('text',{x:38,y:86,'text-anchor':'middle','font-size':10,'font-weight':600,fill:'#555','letter-spacing':'.04em'},s2g,'GROUND');
+ GLM.forEach(([no,nm],i)=>{const x=75+i*66,room=by[no],hit=hits.has(no);
+  tile(s2g,no,{t:'rect',a:{x:x,y:20,width:58,height:110,rx:8},cx:x+29,cy:70},room,'Glamping',hit,anyHit&&!hit,tap,nm);
+ });
+ /* LUXCAMP */
+ h=el('h2','','Luxcamp');h.style.marginTop='30px';box.appendChild(h);secs.lux=h;
+ const s3=sv('svg',{viewBox:'0 0 340 290',class:'map',role:'group','aria-label':'Denah Luxcamp'});box.appendChild(s3);
+ sv('polyline',{points:'85,92 175,118 220,126 305,160 272,197 248,227 222,257',fill:'none',stroke:'#e9e9e9','stroke-width':12,'stroke-linecap':'round','stroke-linejoin':'round'},s3);
+ sv('rect',{x:262,y:78,width:70,height:44,rx:8,fill:'#f6f6f6',stroke:'#bbb'},s3);
+ sv('text',{x:297,y:97,'text-anchor':'middle','font-size':10,'font-weight':700,fill:'#444'},s3,'SCENIC');sv('text',{x:297,y:111,'text-anchor':'middle','font-size':8.5,'font-weight':600,fill:'#555'},s3,'COFFEE & BREAD');
+ LUX.forEach(([no,cx,cy,r,def,ry])=>{const room=by[no],hit=hits.has(no);
+  tile(s3,no,ry?{t:'ellipse',a:{cx:cx,cy:cy,rx:r,ry:ry},cx:cx,cy:cy}:{t:'circle',a:{cx:cx,cy:cy,r:r},cx:cx,cy:cy},room,def,hit,anyHit&&!hit,tap);
+ });
+ const missing=K.filter(r=>!RES.some(x=>x[0]===r.no)&&!GLM.some(x=>x[0]===r.no)&&!LUX.some(x=>x[0]===r.no)).map(r=>r.no);
+ if(missing.length)box.appendChild(el('p','mute','Belum ada di denah: '+missing.join(', ')+'. Lihat tab Daftar.'));
+ if(anyHit){const f=box.querySelector('.mapt[data-no="'+[...hits][0]+'"]');if(f)setTimeout(()=>f.scrollIntoView({behavior:'smooth',block:'center'}),150)}
+}
 function rKamar(v){
+ v.appendChild(tabsBar([['daftar','Daftar'],['denah','Denah']],kmSeg,k=>{kmSeg=k;render()}));
  const s=el('input');s.type='search';s.placeholder='Cari nama atau nomor kamar';s.value=kq;s.style.marginTop='18px';s.setAttribute('aria-label','Cari kamar');v.appendChild(s);
  const list=el('div');v.appendChild(list);
  if(!K){list.appendChild(el('p','mute','Memuat kamar...'));
   call('kamar').then(d=>{K=d.rooms||[];render()}).catch(e=>{list.textContent='';list.appendChild(el('div','msg err','Data kamar belum tersedia ('+errMsg(e)+'). Perbarui Apps Script ke versi terbaru.'))});return}
- s.oninput=()=>{kq=s.value;draw()};draw();
+ let tm=null;
+ s.oninput=()=>{kq=s.value;if(kmSeg==='denah'){clearTimeout(tm);tm=setTimeout(draw,250)}else draw()};draw();
+ function found(nd,rooms){
+  const f=rooms[0];const h=el('div','hl c-green');h.appendChild(icon('bed','green'));const b=el('div');b.appendChild(el('div','k','KAMAR DITEMUKAN'));b.appendChild(el('div','v','Kamar '+f.no));b.appendChild(el('div','s',tlabel(f.type)));h.appendChild(b);return h;
+ }
  function draw(){
   list.textContent='';const nd=kq.trim().toLowerCase();
   const rooms=K.filter(r=>!nd||(r.no+' '+r.names.join(' ')).toLowerCase().includes(nd));
+  if(kmSeg==='denah'){
+   if(nd&&rooms.length)list.appendChild(found(nd,rooms));
+   else if(nd)list.appendChild(el('div','empty','Tidak ada yang cocok.'));
+   drawDenah(list,nd);return;
+  }
   if(!rooms.length){list.appendChild(el('div','empty',K.length?'Tidak ada yang cocok.':'Data kamar belum diisi.'));return}
-  if(nd){const f=rooms[0];const h=el('div','hl c-green');h.appendChild(icon('bed','green'));const b=el('div');b.appendChild(el('div','k','KAMAR DITEMUKAN'));b.appendChild(el('div','v','Kamar '+f.no));b.appendChild(el('div','s',f.type));h.appendChild(b);list.appendChild(h)}
+  if(nd)list.appendChild(found(nd,rooms));
   else{const h=el('div','hl c-green');h.appendChild(icon('bed','green'));const b=el('div');b.appendChild(el('div','k','KAMAR ANDA'));b.appendChild(el('div','v','Cari nama Anda di kotak atas'));h.appendChild(b);list.appendChild(h)}
   const order=TYPES.map(t=>t[0]);
   const types=[...new Set(rooms.map(r=>r.type))].sort((a,b)=>{const x=order.indexOf(a),y=order.indexOf(b);return (x<0?99:x)-(y<0?99:y)});
   types.forEach(t=>{
-   const col=(TYPES.find(x=>x[0]===t)||[0,'gray'])[1];const rs=rooms.filter(r=>r.type===t).sort((a,b)=>a.no.localeCompare(b.no,undefined,{numeric:true}));
-   const sec=el('div','sec');sec.appendChild(icon('bed',col));sec.appendChild(el('b','',t));sec.appendChild(el('span','',rs.length+' kamar'));list.appendChild(sec);
+   const col=tcol(t);const rs=rooms.filter(r=>r.type===t).sort((a,b)=>a.no.localeCompare(b.no,undefined,{numeric:true}));
+   const sec=el('div','sec');sec.appendChild(icon('bed',col));sec.appendChild(el('b','',tlabel(t)));sec.appendChild(el('span','',rs.length+' kamar'));list.appendChild(sec);
    const g=el('div','rooms');
    rs.forEach(r=>{
     const hit=nd&&(r.no+' '+r.names.join(' ')).toLowerCase().includes(nd);
-    const w=el('div','room'+(hit?' hit':''));const h=el('div','rh c-'+col);h.appendChild(el('b','',r.no));h.appendChild(el('small','',r.type));w.appendChild(h);
+    const w=el('div','room'+(hit?' hit':''));const h=el('div','rh c-'+col);h.appendChild(el('b','',r.no));h.appendChild(el('small','',tlabel(r.type)));w.appendChild(h);
     const n=el('div','rn');r.names.forEach(x=>n.appendChild(el('div','nm',x)));
     if(r.family)n.appendChild(el('div','nm fam','Keluarga ('+r.family+' orang)'));
     w.appendChild(n);g.appendChild(w);
