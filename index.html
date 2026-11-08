@@ -391,10 +391,10 @@ function gRank(c){
 }
 
 /* KAMAR */
-const TYPES=[['Deluxe Room','blue'],['Deluxe Riverview','teal'],['Family Room','orange'],['Family Barrack','orange'],['Family Riverview','purple'],['Driam Suite','amber'],['Glamping','green'],['Deluxe Luxcamp','pink'],['Family Luxcamp Blue','indigo'],['Family Luxcamp Orange','indigo']];
+const TYPES=[['Deluxe Riverview','green'],['Deluxe Room','brown'],['Family Room','cyan'],['Family Barrack','cyan'],['Family Riverview','purple'],['Driam Suite','amber'],['Glamping','red'],['Deluxe Luxcamp','brown'],['Family Luxcamp Blue','magenta'],['Family Luxcamp Orange','magenta']];
 /* satu palet untuk daftar kamar dan denah: [isi, muda, tulisan, garis] */
-const PAL={blue:['#c3d8f8','#e6eefc','#1f4fa8','#94b6ec'],teal:['#bfe6e3','#e3f4f4','#0b6466','#86cdc9'],orange:['#fad3bb','#fde9e0','#9a4415','#f1ab80'],purple:['#dfcdf4','#f1eafb','#561f9c','#c2a2e8'],amber:['#fbe5a0','#fff3d6','#6d5000','#efc750'],green:['#bde6cb','#e4f4ea','#1b6a3d','#84cd9f'],pink:['#f7c9dc','#fce6f0','#9c1a55','#ee97bc'],indigo:['#ccd2fa','#e8eafd','#2a3490','#9da7ee'],gray:['#e4e4e4','#f4f4f4','#555','#bdbdbd']};
-const DPAL={blue:['#274a86','#1b2a47','#cfe0ff','#3d63a8'],teal:['#1d6466','#17302f','#c4efec','#2f8a8c'],orange:['#7a3d1a','#34231a','#ffd9c2','#a85a2c'],purple:['#51328a','#2a2040','#e6d8fb','#7a55b8'],amber:['#7a5a0c','#33290f','#ffe9ad','#a8801c'],green:['#1f6a41','#17301f','#c6f0d6','#2f8f5a'],pink:['#8a2e5a','#3a1f2d','#fbd3e4','#b5487f'],indigo:['#38428f','#222645','#d6dbff','#5560b8'],gray:['#3a3a3f','#2a2a2e','#cccccc','#55555a']};
+const PAL={green:['#c4efcf','#e6f8ea','#1f6b3a','#8fd3a4'],brown:['#ecd5bd','#f7ebdd','#7a4a1e','#d3ac84'],cyan:['#bfe9fa','#e3f5fc','#0b5f80','#86cfec'],purple:['#dfcdf4','#f1eafb','#561f9c','#c2a2e8'],amber:['#fbeb9e','#fff8d6','#6d5a00','#efd45c'],red:['#f9c7c7','#fde8e8','#a01f1f','#ee9a9a'],magenta:['#f6c8ec','#fce6f7','#8c1f7a','#e996d8'],gray:['#e4e4e4','#f4f4f4','#555','#bdbdbd']};
+const DPAL=PAL;
 const PL=()=>isDark()?DPAL:PAL;
 (function(){let c='',d='';for(const k in PAL){const p=PAL[k],q=DPAL[k];c+='.rm-'+k+'{background:'+p[0]+';color:'+p[2]+'}';d+='.rm-'+k+'{background:'+q[0]+';color:'+q[2]+'}'}const st=document.createElement('style');st.textContent=c;document.head.appendChild(st)})();
 function bedIcon(col){const d=el('div','ic sq rm-'+col);d.appendChild(svg('bed'));return d}
