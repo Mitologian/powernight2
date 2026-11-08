@@ -105,7 +105,6 @@ label.l{display:block;font-size:12px;letter-spacing:.08em;text-transform:upperca
 .mrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.mrow .go,.mrow .ref{margin-top:0;min-height:50px;font-weight:600}
 .rh.c-orange{background:var(--orange-bg);color:var(--orange-d)}.rh.c-pink{background:var(--pink-bg);color:var(--pink-d)}.rh.c-indigo{background:#e8eafd;color:#2c3590}.rh.c-gray{background:#f0f0f0;color:#555}
 .ic.c-indigo{background:#e8eafd;color:#2c3590}
-.rh b,.rh small{color:inherit}.rh b{color:var(--fg)}
 .map{width:100%;height:auto;display:block;margin-top:10px;border:1px solid var(--line);border-radius:14px;background:#fcfcfc}
 .mapt{cursor:pointer;outline:none}.mapt:focus-visible rect,.mapt:focus-visible circle,.mapt:focus-visible ellipse{stroke:#1a1a1a;stroke-width:3}
 .legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:16px;font-size:12.5px;color:#444}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
@@ -340,8 +339,10 @@ function gRank(c){
 }
 
 /* KAMAR */
-const TYPES=[['Deluxe Room','blue'],['Deluxe Riverview','teal'],['Family Room','orange'],['Family Barrack','orange'],['Family Riverview','purple'],['Driam Suite','amber'],['Glamping','green'],['Deluxe Luxcamp','pink'],['Family Luxcamp Blue','indigo'],['Family Luxcamp Orange','indigo']];
-const PAL={blue:['#4b8bd6','#e6eefc','#1f4fa8'],teal:['#2aa39a','#e3f4f4','#0b6466'],orange:['#e8833a','#fde9e0','#a64b1a'],purple:['#7c4dc4','#f1eafb','#5b34a0'],amber:['#e6a81a','#fff3d6','#7a5a00'],green:['#2e9b5f','#e4f4ea','#1e6b40'],pink:['#d9568f','#fce6f0','#a61e5a'],indigo:['#5560d8','#e8eafd','#2c3590'],gray:['#9a9a9a','#f0f0f0','#555']};
+const TYPES=[['Deluxe Room','brown'],['Deluxe Riverview','green'],['Family Room','cyan'],['Family Barrack','cyan'],['Family Riverview','purple'],['Driam Suite','yellow'],['Glamping','red'],['Deluxe Luxcamp','brown'],['Family Luxcamp Blue','magenta'],['Family Luxcamp Orange','magenta']];
+/* warna sesuai denah venue: [solid, muda, tulisan gelap, tulisan di atas solid] */
+const PAL={brown:['#b8620a','#f6e6d3','#6b3a06','#fff'],green:['#27b83e','#dff5e3','#13702a','#fff'],cyan:['#12aee8','#d9f1fb','#0a6b91','#fff'],purple:['#8a24b8','#f0e0f8','#561274','#fff'],yellow:['#f2d100','#fff8cc','#6e5d00','#3a3000'],red:['#e02424','#fde1e1','#8f1212','#fff'],magenta:['#e025d6','#fbdcf8','#8d1286','#fff'],gray:['#9a9a9a','#f0f0f0','#555','#fff']};
+(function(){let c='';for(const k in PAL){const p=PAL[k];c+='.rh.c-'+k+'{background:'+p[0]+';color:'+p[3]+'}.rh.c-'+k+' b,.rh.c-'+k+' small{color:'+p[3]+'}.ic.c-'+k+'{background:'+p[0]+';color:'+p[3]+'}'}const st=document.createElement('style');st.textContent=c;document.head.appendChild(st)})();
 const tcol=t=>(TYPES.find(x=>x[0]===t)||[0,'gray'])[1];
 const tlabel=t=>String(t).replace(/Riverview/g,'River View');
 let kmSeg='daftar';
@@ -363,7 +364,7 @@ function tile(par,no,shape,room,def,hit,dim,onTap,extra){
  const st=occ?{fill:c[0],stroke:c[0]}:{fill:c[1],stroke:c[0],'stroke-dasharray':'4 3'};
  const sh=sv(shape.t,Object.assign({'stroke-width':1.5},st,shape.a),g);
  if(hit){sh.setAttribute('stroke','#f2a900');sh.setAttribute('stroke-width','4');sh.setAttribute('stroke-dasharray','none')}
- const tc=occ?'#fff':c[2];
+ const tc=occ?c[3]:c[2];
  sv('text',{x:shape.cx,y:shape.cy+(extra?-3:4),'text-anchor':'middle','font-size':12,'font-weight':600,fill:tc,'pointer-events':'none'},g,no);
  if(extra)sv('text',{x:shape.cx,y:shape.cy+9,'text-anchor':'middle','font-size':8.5,'font-weight':600,fill:tc,'pointer-events':'none','letter-spacing':'.04em'},g,extra);
  if(dim)g.setAttribute('opacity','.3');
