@@ -15,7 +15,7 @@
 *{box-sizing:border-box}
 body{margin:0;-webkit-tap-highlight-color:transparent;background:#fff;color:var(--fg);font-family:'Inter',system-ui,sans-serif;font-size:16px;line-height:1.45;padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 .banner{background:var(--red);color:#fff;padding:calc(16px + env(safe-area-inset-top,0px)) 20px 20px;position:relative;overflow:hidden;min-height:124px}
-.banner svg{position:absolute;left:0;right:0;bottom:0;width:100%;height:60px}
+.banner svg{position:absolute;inset:0;width:100%;height:100%}
 .banner>*:not(svg){position:relative}
 .eyebrow{font-size:11px;font-weight:600;letter-spacing:.16em}
 h1{font-size:30px;line-height:1.1;margin:6px 0 0;font-weight:600}
@@ -96,7 +96,7 @@ label.l{display:block;font-size:12px;letter-spacing:.08em;text-transform:upperca
 .nm.fam{background:#fff;border:1px dashed #bdbdbd;color:var(--purple-d);font-weight:500}
 </style></head>
 <body>
-<header class="banner"><svg viewBox="0 0 360 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 60V30Q60 8 130 26T250 22T360 14V60Z" fill="#a60d26"/></svg>
+<header class="banner"><svg viewBox="0 0 360 120" preserveAspectRatio="xMaxYMid slice" aria-hidden="true"><path d="M318 8L344 34L318 60L292 34Z" fill="#fff" opacity="0.1"/><path d="M272 62L288 78L272 94L256 78Z" fill="#fff" opacity="0.08"/><path d="M344 80L356 92L344 104L332 92Z" fill="#fff" opacity="0.08"/><path d="M236 17L245 26L236 35L227 26Z" fill="#fff" opacity="0.07"/></svg>
 <div class="eyebrow">BNI GROW · 27-28 NOV</div><h1>Power Night 2</h1><div class="sub" id="sub">Rundown</div></header>
 <main id="view"><div class="empty">Memuat...</div></main>
 <nav role="tablist">
@@ -311,7 +311,7 @@ function gNilai(c){
  const o0=el('option','','Pilih nama penyanyi');o0.value='';s.appendChild(o0);
  D.singers.forEach(x=>{const o=el('option','',(done.includes(x.name)?'✓ ':'')+x.name);o.value=x.name;s.appendChild(o)});
  s.value=chosen;c.appendChild(s);
- const sc=el('div','score');sc.appendChild(el('div','k','SKOR ANDA'));const num=el('div','n',score||'-');sc.appendChild(num);sc.appendChild(el('div','s','Suara, gaya, dan interaksi penonton'));c.appendChild(sc);
+ const sc=el('div','score');sc.appendChild(el('div','k','SKOR DARI ANDA'));const num=el('div','n',score||'-');sc.appendChild(num);sc.appendChild(el('div','s','Suara, gaya, dan interaksi penonton'));c.appendChild(sc);
  const ch=el('div','chips');
  const btn=el('button','go','Kirim nilai');btn.type='button';
  for(let i=1;i<=10;i++){const b=el('button','',String(i));b.type='button';b.setAttribute('aria-pressed',score===i);b.onclick=()=>{score=i;num.textContent=i;ch.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));check()};ch.appendChild(b)}
