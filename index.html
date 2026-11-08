@@ -8,18 +8,13 @@
 <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png"><link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <title>Power Night 2</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
-<style>:root{color-scheme:light dark;--bg:#f5f5f7;--card:#fff;--fg:#1a1a1a;--mute:#6b6b73;--line:#ececf0;--soft:#f1f1f4;--field:#d9d9df;--seg:#e9e9ee;--track:#e6e6ec;
+<style>:root{color-scheme:light;--bg:#f5f5f7;--card:#fff;--fg:#1a1a1a;--mute:#6b6b73;--line:#ececf0;--soft:#f1f1f4;--field:#d9d9df;--seg:#e9e9ee;--track:#e6e6ec;
 --shadow:0 1px 2px rgba(16,24,40,.05),0 8px 24px rgba(16,24,40,.07);
 --red:#c8102e;--redd:#a60d26;--red-t:#c8102e;--red-soft:#fde7eb;
 --blue-bg:#e6eefc;--blue:#2f6fde;--blue-d:#1f4fa8;--teal-bg:#e3f4f4;--teal:#0f8b8d;--teal-d:#0b6466;--amber-bg:#fff3d6;--amber:#f2a900;--amber-d:#7a5a00;
 --green-bg:#e4f4ea;--green:#2e9b5f;--green-d:#1e6b40;--purple-bg:#f1eafb;--purple:#7c4dc4;--purple-d:#5b34a0;--orange:#ec8a3d;--orange-bg:#fde9e0;--orange-d:#a64b1a;--pink-bg:#fce6f0;--pink-d:#a61e5a;--indigo-bg:#e8eafd;--indigo-d:#2c3590;
 --gold:#f6e3a1;--silver:#e1e4ea;--bronze:#efcfb3;--err-bg:#fde8ec;--err-t:#8a1020;--ok-bg:#e3f4ea;--ok-t:#0d5a2d;
 --m-cor:#e9e9ee;--m-a:#fff;--m-b:#f6f6f8;--m-stk:#bdbdc4;--m-txt:#444;--m-txt2:#555;--m-wfill:#d6e6fb;--m-wstk:#94b6ec;--m-wtxt:#1f4fa8}
-@media (prefers-color-scheme:dark){:root{--bg:#0e0e11;--card:#1a1a1f;--fg:#f2f2f4;--mute:#a0a0aa;--line:#2a2a31;--soft:#26262c;--field:#3a3a43;--seg:#24242a;--track:#2c2c33;
---shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);--red-t:#ff7a90;--red-soft:#3a1620;
---blue-bg:#1b2a47;--blue-d:#cfe0ff;--teal-bg:#17302f;--teal-d:#c4efec;--amber-bg:#33290f;--amber-d:#ffe9ad;--green-bg:#17301f;--green-d:#c6f0d6;--purple-bg:#2a2040;--purple-d:#e6d8fb;--orange-bg:#34231a;--orange-d:#ffd9c2;--pink-bg:#3a1f2d;--pink-d:#fbd3e4;--indigo-bg:#222645;--indigo-d:#d6dbff;
---gold:#6b5a1f;--silver:#4a4d56;--bronze:#6b4a30;--err-bg:#3a1620;--err-t:#ffb3c0;--ok-bg:#17301f;--ok-t:#c6f0d6;
---m-cor:#2a2a31;--m-a:#202026;--m-b:#25252b;--m-stk:#4a4a54;--m-txt:#d0d0d6;--m-txt2:#aaaab2;--m-wfill:#1b2a47;--m-wstk:#3d63a8;--m-wtxt:#cfe0ff}}
 *{box-sizing:border-box}
 body{margin:0;-webkit-tap-highlight-color:transparent;background:var(--bg);color:var(--fg);font-family:'Inter',system-ui,sans-serif;font-size:16px;line-height:1.45;padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
 .banner{position:relative;background:#2b3a2c;line-height:0;padding-top:env(safe-area-inset-top,0px);border-radius:0 0 28px 28px;overflow:hidden}
@@ -156,7 +151,7 @@ const $=s=>document.querySelector(s);
 const el=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e};
 const API=window.PN_API||'';
 const C=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-const isDark=()=>matchMedia('(prefers-color-scheme:dark)').matches;
+const isDark=()=>false;
 const LOCK='<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>',UNLOCK='<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 017.5-1.5"/>';
 const IC={clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',home:'<path d="M3 20V9l9-6 9 6v11zM9 20v-6h6v6"/>',users:'<path d="M9 11a3 3 0 100-6 3 3 0 000 6zM3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 5.2a3 3 0 010 5.6M18 14.3c1.8.8 3 2.6 3 4.7"/>',flame:'<path d="M12 3c1 3 4 4 4 8a4 4 0 01-8 0c0-2 1-3 2-4 0 2 1 2 1 1 0-2 0-3 1-5zM8 21h8"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',mic:'<path d="M12 3a3 3 0 013 3v5a3 3 0 01-6 0V6a3 3 0 013-3zM5 11a7 7 0 0014 0M12 18v3"/>',trophy:'<path d="M7 4h10v5a5 5 0 01-10 0zM7 6H4v1a3 3 0 003 3M17 6h3v1a3 3 0 01-3 3M12 14v4M8 20h8"/>',target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',food:'<path d="M6 3v8a2 2 0 002 2v8M10 3v6M6 7h4M17 3c-2 2-3 5-3 8h3v10"/>',bed:'<path d="M3 18V7M3 14h18v4M21 14v-2a3 3 0 00-3-3h-7v5"/>'};
 function svg(name){const s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.setAttribute('viewBox','0 0 24 24');s.setAttribute('aria-hidden','true');s.innerHTML=IC[name]||IC.clock;return s}
@@ -401,7 +396,7 @@ const TYPES=[['Deluxe Room','blue'],['Deluxe Riverview','teal'],['Family Room','
 const PAL={blue:['#c3d8f8','#e6eefc','#1f4fa8','#94b6ec'],teal:['#bfe6e3','#e3f4f4','#0b6466','#86cdc9'],orange:['#fad3bb','#fde9e0','#9a4415','#f1ab80'],purple:['#dfcdf4','#f1eafb','#561f9c','#c2a2e8'],amber:['#fbe5a0','#fff3d6','#6d5000','#efc750'],green:['#bde6cb','#e4f4ea','#1b6a3d','#84cd9f'],pink:['#f7c9dc','#fce6f0','#9c1a55','#ee97bc'],indigo:['#ccd2fa','#e8eafd','#2a3490','#9da7ee'],gray:['#e4e4e4','#f4f4f4','#555','#bdbdbd']};
 const DPAL={blue:['#274a86','#1b2a47','#cfe0ff','#3d63a8'],teal:['#1d6466','#17302f','#c4efec','#2f8a8c'],orange:['#7a3d1a','#34231a','#ffd9c2','#a85a2c'],purple:['#51328a','#2a2040','#e6d8fb','#7a55b8'],amber:['#7a5a0c','#33290f','#ffe9ad','#a8801c'],green:['#1f6a41','#17301f','#c6f0d6','#2f8f5a'],pink:['#8a2e5a','#3a1f2d','#fbd3e4','#b5487f'],indigo:['#38428f','#222645','#d6dbff','#5560b8'],gray:['#3a3a3f','#2a2a2e','#cccccc','#55555a']};
 const PL=()=>isDark()?DPAL:PAL;
-(function(){let c='',d='';for(const k in PAL){const p=PAL[k],q=DPAL[k];c+='.rm-'+k+'{background:'+p[0]+';color:'+p[2]+'}';d+='.rm-'+k+'{background:'+q[0]+';color:'+q[2]+'}'}const st=document.createElement('style');st.textContent=c+'@media (prefers-color-scheme:dark){'+d+'}';document.head.appendChild(st)})();
+(function(){let c='',d='';for(const k in PAL){const p=PAL[k],q=DPAL[k];c+='.rm-'+k+'{background:'+p[0]+';color:'+p[2]+'}';d+='.rm-'+k+'{background:'+q[0]+';color:'+q[2]+'}'}const st=document.createElement('style');st.textContent=c;document.head.appendChild(st)})();
 function bedIcon(col){const d=el('div','ic sq rm-'+col);d.appendChild(svg('bed'));return d}
 const tcol=t=>(TYPES.find(x=>x[0]===t)||[0,'gray'])[1];
 const tlabel=t=>String(t).replace(/Riverview/g,'River View');
@@ -537,7 +532,6 @@ function rKamar(v){
  }
 }
 $('#adm').onclick=()=>{adm=!adm;if(adm){tab='team';kSeg='undi'}else kSeg='lawan';render();window.scrollTo(0,0)};
-matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>render());
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render();window.scrollTo(0,0)});
 call('data').then(d=>{D=d;render()}).catch(e=>{$('#view').textContent='';const c=el('div');c.appendChild(el('div','msg err','Gagal memuat data: '+errMsg(e)));const b=el('button','go','Coba lagi');b.onclick=()=>location.reload();c.appendChild(b);$('#view').appendChild(c)});
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
