@@ -7,93 +7,113 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <title>Power Night 2</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
 <style>
-:root{color-scheme:light;--bg:#fff;--fg:#111;--mute:#555;--line:#e3e3e3;--soft:#f4f4f4;--red:#c8102e;--redd:#9d0c24;--ok:#0d5a2d;
---disp:'Space Grotesk','Arial Narrow',sans-serif;--body:'Inter',system-ui,sans-serif}
+:root{color-scheme:light;--fg:#1a1a1a;--mute:#5f5f5f;--line:#e6e6e6;--soft:#f4f4f4;--red:#c8102e;--redd:#a60d26;
+--blue-bg:#e6eefc;--blue:#2f6fde;--blue-d:#1f4fa8;--teal-bg:#e3f4f4;--teal:#0f8b8d;--teal-d:#0b6466;--amber-bg:#fff3d6;--amber:#f2a900;--amber-d:#7a5a00;
+--green-bg:#e4f4ea;--green:#2e9b5f;--green-d:#1e6b40;--purple-bg:#f1eafb;--purple:#7c4dc4;--purple-d:#5b34a0;--orange-bg:#fde9e0;--orange-d:#a64b1a;--pink-bg:#fce6f0;--pink-d:#a61e5a}
 *{box-sizing:border-box}
-body{margin:0;-webkit-tap-highlight-color:transparent;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.45;padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
-header{background:var(--red);color:#fff;padding:calc(14px + env(safe-area-inset-top,0px)) 20px 16px}
-.eyebrow{font-size:11px;font-weight:700;letter-spacing:.16em;opacity:.95}
-h1{font-family:var(--disp);font-size:30px;line-height:1.1;margin:3px 0 0;font-weight:700}
-.sub{font-size:14px;margin-top:3px;opacity:.95}
-main{max-width:560px;margin:0 auto;padding:0 20px 20px}
+body{margin:0;-webkit-tap-highlight-color:transparent;background:#fff;color:var(--fg);font-family:'Inter',system-ui,sans-serif;font-size:16px;line-height:1.45;padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+.banner{background:var(--red);color:#fff;padding:calc(16px + env(safe-area-inset-top,0px)) 20px 20px;position:relative;overflow:hidden;min-height:124px}
+.banner svg{position:absolute;left:0;right:0;bottom:0;width:100%;height:60px}
+.banner>*:not(svg){position:relative}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.16em}
+h1{font-size:30px;line-height:1.1;margin:6px 0 0;font-weight:600}
+.sub{font-size:15px;font-weight:500;margin-top:10px;margin-bottom:6px}
+main{max-width:560px;margin:0 auto;padding:0 20px 24px}
 #view>*{animation:pop .2s ease both}@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}@media (prefers-reduced-motion:reduce){#view>*{animation:none}}
-h2{font-family:var(--disp);font-size:22px;margin:22px 0 4px;font-weight:700}
-.mute{color:var(--mute);font-size:14px;margin:4px 0}
 .tabs{display:flex;border-bottom:1px solid var(--line);margin:0 -20px;padding:0 20px;position:sticky;top:0;background:#fff;z-index:5}
-.tabs button{flex:1;border:0;background:none;padding:15px 4px 12px;font:inherit;font-size:15px;font-weight:500;color:var(--mute);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
-.tabs button[aria-pressed="true"]{color:var(--fg);font-weight:700;border-bottom-color:var(--red)}
+.tabs button{flex:1;border:0;background:none;padding:15px 2px 12px;font:inherit;font-size:14px;font-weight:400;color:var(--mute);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px;display:flex;align-items:center;justify-content:center;gap:6px}
+.tabs button[aria-pressed="true"]{color:var(--fg);font-weight:600;border-bottom-color:var(--red)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--red);animation:pulse 1.4s infinite}@keyframes pulse{50%{opacity:.25}}
 nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));z-index:8}
-nav button{border:0;background:none;padding:4px 2px;min-height:48px;font:inherit;font-size:11.5px;color:var(--mute);cursor:pointer;font-weight:600;display:grid;justify-items:center;gap:3px}
+nav button{border:0;background:none;padding:4px 2px;min-height:48px;font:inherit;font-size:11.5px;color:var(--mute);cursor:pointer;font-weight:500;display:grid;justify-items:center;gap:3px}
 nav svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 nav button[aria-selected="true"]{color:var(--red)}
 button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--red);outline-offset:2px}
-.ev{display:grid;grid-template-columns:64px 1fr;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
-.t{font-family:var(--disp);font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
-.ev b{display:block;font-weight:600;font-size:16px}.ev small{display:block;color:var(--mute);font-size:13.5px;margin-top:2px}
-input[type=search],select,input[type=text],input[type=password],input[type=number]{width:100%;font:inherit;padding:13px 12px;border:1px solid #cfcfcf;border-radius:6px;background:#fff;color:var(--fg)}
-.gh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:24px;padding-bottom:6px;border-bottom:2px solid var(--fg)}
-.gh h3{font-family:var(--disp);font-size:20px;margin:0;font-weight:700}
-.gd{font-size:13px;color:var(--mute);margin:6px 0 0}
-.mem{padding:11px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px}
-.mem b{font-weight:600}.mem small{color:var(--mute);text-align:right;font-size:13.5px}
-label.l{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-weight:700;margin:16px 0 6px}
-.sing{margin:16px 0 4px;padding:12px 0;border-bottom:1px solid var(--line)}
-.cat{margin-top:6px;padding:14px 0;border-bottom:1px solid var(--line)}
-.cat .h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
-.cat .h b{font-size:16px;font-weight:600}
-.cat .h span{font-family:var(--disp);font-size:28px;font-weight:700;color:var(--red);min-width:30px;text-align:right}
-.chips{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-.chips button{height:48px;border:0;border-radius:4px;background:var(--soft);font:inherit;font-size:17px;font-weight:600;color:var(--fg);cursor:pointer;font-variant-numeric:tabular-nums}
-.chips button[aria-pressed="true"]{background:var(--red);color:#fff}
-.go{width:100%;margin-top:22px;border:0;border-radius:6px;background:var(--red);color:#fff;font:inherit;font-weight:700;font-size:16px;padding:15px;min-height:50px;cursor:pointer}
+.mute{color:var(--mute);font-size:13.5px;margin:12px 0 0}
+h2{font-size:18px;margin:26px 0 0;font-weight:600}
+.stack{display:grid;gap:12px;margin-top:14px}
+.hl{margin-top:18px;border-radius:14px;padding:14px;display:flex;align-items:center;gap:14px}
+.ic{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;flex-shrink:0}
+.ic.sq{border-radius:12px}
+.ic svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.hl .k{font-size:11px;font-weight:600;letter-spacing:.1em}
+.hl .v{font-weight:600;font-size:17px;line-height:1.2;margin-top:2px}
+.hl .s{font-size:12.5px;margin-top:2px;opacity:.85}
+.hl .r{margin-left:auto;font-weight:600;font-size:17px;white-space:nowrap}
+.c-amber{background:var(--amber-bg);color:var(--amber-d)}.c-amber .ic{background:var(--amber);color:#fff}
+.c-teal{background:var(--teal-bg);color:var(--teal-d)}.c-teal .ic{background:var(--teal);color:#fff}
+.c-green{background:var(--green-bg);color:var(--green-d)}.c-green .ic{background:var(--green);color:#fff}
+.c-purple{background:var(--purple-bg);color:var(--purple-d)}.c-purple .ic{background:var(--purple);color:#fff}
+.c-blue{background:var(--blue-bg);color:var(--blue-d)}.c-blue .ic{background:var(--blue);color:#fff}
+.hl .v,.hl .s{color:var(--fg)}
+.row{display:flex;gap:14px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;align-items:center}
+.row .b{flex-grow:1;min-width:0}.row b{font-weight:600;font-size:15px;display:block}.row small{display:block;font-size:12.5px;color:var(--mute);margin-top:1px}
+.row .t{font-weight:600;font-size:14px;color:#444;white-space:nowrap}
+.ic.c-amber{background:var(--amber-bg);color:var(--amber-d)}.ic.c-teal{background:var(--teal-bg);color:var(--teal-d)}.ic.c-green{background:var(--green-bg);color:var(--green-d)}.ic.c-purple{background:var(--purple-bg);color:var(--purple-d)}.ic.c-blue{background:var(--blue-bg);color:var(--blue-d)}.ic.c-orange{background:var(--orange-bg);color:var(--orange-d)}.ic.c-gray{background:var(--soft);color:#444}
+.tm{margin-top:22px}
+.tmh{border-radius:14px 14px 0 0;padding:12px 14px;background:var(--teal-bg);color:var(--teal-d)}
+.tmh b{display:block;font-size:16px;font-weight:600;color:var(--fg)}.tmh small{font-size:12.5px;color:var(--teal-d)}
+.tmb{border:1px solid var(--line);border-top:0;border-radius:0 0 14px 14px;padding:6px 12px;display:grid}
+.mem{display:flex;align-items:center;gap:14px;padding:10px 2px}
+.mem+.mem{border-top:1px solid var(--line)}
+.av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:600;font-size:12px;background:var(--teal-bg);color:var(--teal-d);flex-shrink:0}
+.mem span{font-weight:500;font-size:15px}
+.mem.me{background:var(--amber-bg);border-radius:10px;padding-left:8px;margin:2px 0}
+input[type=search],select,input[type=text],input[type=password],input[type=number]{width:100%;font:inherit;padding:14px;border:1px solid #cfcfcf;border-radius:10px;background:#fff;color:var(--fg)}
+label.l{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-weight:600;margin:20px 0 8px}
+.score{margin-top:20px;border-radius:14px;padding:16px;text-align:center;background:var(--purple-bg);color:var(--purple-d)}
+.score .k{font-size:11px;font-weight:600;letter-spacing:.1em}.score .n{font-size:56px;font-weight:600;line-height:1.1}.score .s{font-size:12.5px;color:#555}
+.chips{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:18px}
+.chips button{height:48px;border:0;border-radius:12px;background:#f1f1f1;font:inherit;font-size:17px;font-weight:600;color:#333;cursor:pointer;font-variant-numeric:tabular-nums}
+.chips button[aria-pressed="true"]{background:var(--purple);color:#fff}
+.go{width:100%;margin-top:20px;border:0;border-radius:10px;background:var(--red);color:#fff;font:inherit;font-weight:600;font-size:16px;padding:15px;min-height:50px;cursor:pointer}
 .go:disabled{opacity:.45;cursor:not-allowed}
-.msg{padding:12px;border-radius:6px;font-size:15px;margin-top:14px}.err{background:#fde8ec;color:#8a1020}.okm{background:#e3f4ea;color:#0d5a2d}
+.msg{padding:12px;border-radius:10px;font-size:15px;margin-top:14px}.err{background:#fde8ec;color:#8a1020}.okm{background:#e3f4ea;color:#0d5a2d}
 .empty{text-align:center;color:var(--mute);padding:36px 8px}
-.ref{border:1px solid #cfcfcf;background:#fff;border-radius:6px;padding:10px 16px;font:inherit;cursor:pointer;margin-top:16px}
-.lead{margin-top:18px;background:var(--red);color:#fff;border-radius:8px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.lead small{display:block;font-size:11px;letter-spacing:.12em;font-weight:700}
-.lead b{font-family:var(--disp);font-size:24px;line-height:1.15;display:block;margin-top:2px}
-.lead .big{font-family:var(--disp);font-size:40px;font-weight:700}
-.rank{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
-.no{font-family:var(--disp);font-size:20px;font-weight:700}
-.rank b{font-weight:600;display:block}.rank small{display:block;color:var(--mute);font-size:13px}
-.tot{font-family:var(--disp);font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
-.tbl{display:grid;grid-template-columns:34px 1fr 64px;gap:8px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
-.tbl.h{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);font-weight:700;padding:16px 0 8px;border-bottom:2px solid var(--fg)}
-.tbl .n{font-family:var(--disp);font-size:20px;font-weight:700}
-.tbl b{font-weight:600}.tbl .tt{font-family:var(--disp);font-size:22px;font-weight:700;text-align:right}
-.tbl .r{text-align:right}
-.vs{padding:14px 0;border-bottom:1px solid var(--line);display:grid;gap:6px}
-.vs .row{display:flex;justify-content:space-between;gap:10px;align-items:center}
-.vs .row b{font-weight:600}.vs .row i{font-style:normal;font-size:12px;color:var(--mute);font-weight:700}
-.win{display:inline-block;font-size:12px;font-weight:700;color:#fff;background:var(--ok);border-radius:4px;padding:2px 8px;margin-left:6px}
-.use{border:1px solid var(--red);color:var(--red);background:#fff;border-radius:6px;padding:8px 12px;font:inherit;font-weight:600;font-size:14px;cursor:pointer}
-.pill{display:inline-block;font-size:12.5px;font-weight:600;padding:3px 9px;border-radius:4px;background:var(--soft);color:var(--mute);margin:3px 4px 0 0}
+.ref{border:1px solid #cfcfcf;background:#fff;border-radius:10px;padding:10px 16px;font:inherit;cursor:pointer;margin-top:16px}
+.rk{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:12px}
+.rk .n{font-weight:600;font-size:17px;color:var(--purple)}.rk b{font-weight:500;font-size:15px;display:block}.rk small{font-size:12px;color:var(--mute)}.rk .s{font-weight:600;font-size:19px}
+.vs{padding:12px 14px;border:1px solid var(--line);border-radius:12px;display:grid;gap:4px}
+.vs .t{display:flex;justify-content:space-between;gap:10px;align-items:center}.vs b{font-weight:600;font-size:15px}.vs i{font-style:normal;font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--mute)}
+.use{border:1px solid var(--red);color:var(--red);background:#fff;border-radius:8px;padding:8px 12px;font:inherit;font-weight:500;font-size:14px;cursor:pointer}
+.pill{display:inline-block;font-size:12.5px;font-weight:500;padding:3px 9px;border-radius:6px;background:var(--soft);color:var(--mute);margin:6px 6px 0 0}
 .grow{display:grid;grid-template-columns:1fr 100px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
-.del{border:1px solid #cfcfcf;background:#fff;border-radius:6px;padding:6px 12px;font:inherit;font-size:13px;color:var(--red);cursor:pointer}
+.del{border:1px solid #cfcfcf;background:#fff;border-radius:8px;padding:6px 12px;font:inherit;font-size:13px;color:var(--red);cursor:pointer}
 .logrow{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
-.radios{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.radios button{padding:13px 6px;min-height:48px;border:1px solid #cfcfcf;border-radius:6px;background:#fff;font:inherit;font-weight:600;font-size:14px;cursor:pointer;color:var(--fg)}
+.radios{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.radios button{padding:13px 6px;min-height:48px;border:1px solid #cfcfcf;border-radius:10px;background:#fff;font:inherit;font-weight:500;font-size:14px;cursor:pointer;color:var(--fg)}
 .radios button[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}
-.dl{display:grid;gap:0}
+.sec{display:flex;align-items:center;gap:10px;margin-top:26px}
+.sec b{font-size:16px;font-weight:600}.sec span{font-size:12.5px;color:var(--mute)}
+.rooms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:12px}
+.room{border:1px solid #dadada;border-radius:14px;overflow:hidden;background:#fff}
+.room.hit{border-color:var(--amber);box-shadow:0 0 0 2px var(--amber)}
+.rh{padding:10px 12px}.rh b{display:block;font-size:20px;font-weight:600;line-height:1.1}.rh small{font-size:11.5px;font-weight:500}
+.rn{padding:10px;display:grid;gap:8px}
+.nm{background:#f4f4f4;border-radius:8px;padding:8px 10px;font-weight:500;font-size:13px;line-height:1.2;min-height:46px;display:flex;align-items:center}
+.nm.fam{background:#fff;border:1px dashed #bdbdbd;color:var(--purple-d);font-weight:500}
 </style></head>
 <body>
-<header><div class="eyebrow">BNI GROW</div><h1 id="ttl">Power Night 2</h1><div class="sub" id="sub">27-28 November 2026 · Driam Riverside</div></header>
-<main id="view"><div class="card empty">Memuat...</div></main>
+<header class="banner"><svg viewBox="0 0 360 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 60V30Q60 8 130 26T250 22T360 14V60Z" fill="#a60d26"/></svg>
+<div class="eyebrow">BNI GROW · 27-28 NOV</div><h1>Power Night 2</h1><div class="sub" id="sub">Rundown</div></header>
+<main id="view"><div class="empty">Memuat...</div></main>
 <nav role="tablist">
-<button role="tab" data-t="rundown" aria-selected="true"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg></span><span>Rundown</span></button>
-<button role="tab" data-t="kelompok" aria-selected="false"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14c2.7 0 4.5 1.8 4.5 4.5"/></svg></span><span>Kelompok</span></button>
-<button role="tab" data-t="karaoke" aria-selected="false"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6"/></svg></span><span>Karaoke</span></button>
-<button role="tab" data-t="top" aria-selected="false"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/><path d="M8 6H4v1a4 4 0 0 0 4 4M16 6h4v1a4 4 0 0 1-4 4M12 13v4M8 20h8M10 17h4"/></svg></span><span>Grow Idol</span></button>
+<button role="tab" data-t="rundown" aria-selected="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4"/></svg><span>Rundown</span></button>
+<button role="tab" data-t="team" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11a3 3 0 100-6 3 3 0 000 6zM3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 5.2a3 3 0 010 5.6M18 14.3c1.8.8 3 2.6 3 4.7"/></svg><span>Team</span></button>
+<button role="tab" data-t="idol" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 013 3v5a3 3 0 01-6 0V6a3 3 0 013-3zM5 11a7 7 0 0014 0M12 18v3"/></svg><span>Grow Idol</span></button>
+<button role="tab" data-t="kamar" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20V9l9-6 9 6v11zM9 20v-6h6v6"/></svg><span>Kamar</span></button>
 </nav>
 <script src="config.js"></script>
 <script>
 const $=s=>document.querySelector(s);
 const el=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e};
 const API=window.PN_API||'';
-let D=null,tab='rundown',kSeg='anggota',iSeg='game',sel={suara:0,gaya:0,interaksi:0},chosen='',q='',pin='';
+const IC={clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',home:'<path d="M3 20V9l9-6 9 6v11zM9 20v-6h6v6"/>',users:'<path d="M9 11a3 3 0 100-6 3 3 0 000 6zM3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 5.2a3 3 0 010 5.6M18 14.3c1.8.8 3 2.6 3 4.7"/>',flame:'<path d="M12 3c1 3 4 4 4 8a4 4 0 01-8 0c0-2 1-3 2-4 0 2 1 2 1 1 0-2 0-3 1-5zM8 21h8"/>',mic:'<path d="M12 3a3 3 0 013 3v5a3 3 0 01-6 0V6a3 3 0 013-3zM5 11a7 7 0 0014 0M12 18v3"/>',trophy:'<path d="M7 4h10v5a5 5 0 01-10 0zM7 6H4v1a3 3 0 003 3M17 6h3v1a3 3 0 01-3 3M12 14v4M8 20h8"/>',target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',food:'<path d="M6 3v8a2 2 0 002 2v8M10 3v6M6 7h4M17 3c-2 2-3 5-3 8h3v10"/>',bed:'<path d="M3 18V7M3 14h18v4M21 14v-2a3 3 0 00-3-3h-7v5"/>'};
+function svg(name){const s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.setAttribute('viewBox','0 0 24 24');s.setAttribute('aria-hidden','true');s.innerHTML=IC[name]||IC.clock;return s}
+function icon(name,color,sq){const d=el('div','ic c-'+color+(sq?' sq':''));d.appendChild(svg(name));return d}
+let D=null,K=null,tab='rundown',rDay='',kSeg='tim',gSeg='nilai',score=0,chosen='',q='',kq='',pin='',timer=null;
 try{pin=sessionStorage.getItem('pn_pin')||''}catch(e){}
 function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
 let dev=store('pn_dev');
@@ -111,91 +131,112 @@ async function call(action,body){
 }
 const errMsg=e=>String((e&&e.message)||e).replace(/^Error:\s*/,'');
 function msg(parent,t,ok){let m=parent.querySelector('.msg');if(!m){m=el('div','msg');parent.appendChild(m)}m.className='msg '+(ok?'okm':'err');m.textContent=t}
-function seg(items,cur,on){const s=el('div','seg');items.forEach(([k,t])=>{const b=el('button','',t);b.type='button';b.setAttribute('aria-pressed',k===cur);b.onclick=()=>on(k);s.appendChild(b)});return s}
+const fm=x=>Number(x).toFixed(1).replace('.',',');
+function tabsBar(items,cur,on){const t=el('div','tabs');items.forEach(([k,n,live])=>{const b=el('button','');b.type='button';if(live)b.appendChild(el('span','dot'));b.appendChild(document.createTextNode(n));b.setAttribute('aria-pressed',k===cur);b.onclick=()=>on(k);t.appendChild(b)});return t}
+const initials=n=>n.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0].toUpperCase()).join('');
 
-const fm=x=>Number(x).toFixed(2).replace('.',',');
-let rDay='';
 function render(){
+ clearInterval(timer);timer=null;
  const v=$('#view');v.textContent='';
  document.querySelectorAll('nav button').forEach(b=>b.setAttribute('aria-selected',b.dataset.t===tab));
- $('#ttl').textContent={rundown:'Power Night 2',kelompok:'Kelompok',karaoke:'Karaoke',top:'Grow Idol'}[tab];
- $('#sub').textContent={rundown:'27-28 November 2026 · Driam Riverside',kelompok:'Tim dan skor outing',karaoke:'Nilai penampil, anonim',top:'Peringkat penyanyi'}[tab];
+ $('#sub').textContent={rundown:'Rundown',team:'Team',idol:gSeg==='nilai'?'Grow Idol · Nilai':'Grow Idol · Ranking live',kamar:'Kamar'}[tab];
  if(!D){v.appendChild(el('div','empty','Memuat...'));return}
- ({rundown:rRundown,kelompok:rKelompok,karaoke:rKaraoke,top:rTop})[tab](v);
+ ({rundown:rRundown,team:rTeam,idol:rIdol,kamar:rKamar})[tab](v);
+}
+
+/* RUNDOWN */
+function evIcon(t){t=t.toLowerCase();
+ if(/check.?in|kamar|room/.test(t))return['home','green'];
+ if(/karaoke|idol|nyanyi/.test(t))return['mic','purple'];
+ if(/barbe|bbq|makan|dinner|lunch|sarapan|breakfast|coffee/.test(t))return['flame','amber'];
+ if(/paintball/.test(t))return['target','blue'];
+ if(/game|lomba|outing/.test(t))return['trophy','orange'];
+ if(/meeting|conclave|121|briefing|welcome|sharing|training/.test(t))return['users','teal'];
+ return['clock','gray'];
+}
+function minutes(t){const m=String(t||'').match(/(\d{1,2})[.:](\d{2})/);return m?(+m[1])*60+(+m[2]):null}
+function nowEvent(items){
+ const n=new Date();if(n.getFullYear()!==2026||n.getMonth()!==10)return null;
+ const today=items.filter(r=>{const d=String(r.day).match(/\d+/);return d&&+d[0]===n.getDate()});
+ const cur=n.getHours()*60+n.getMinutes();let found=null;
+ today.forEach(r=>{const m=minutes(r.time);if(m!==null&&m<=cur)found=r});
+ return found;
 }
 function rRundown(v){
  if(!D.rundown.length){v.appendChild(el('div','empty','Rundown belum diisi panitia.'));return}
  const days=[];D.rundown.forEach(r=>{if(!days.includes(r.day))days.push(r.day)});
- if(!days.includes(rDay))rDay=days[0];
- const t=el('div','tabs');days.forEach(d=>{const b=el('button','',d||'Rundown');b.type='button';b.setAttribute('aria-pressed',d===rDay);b.onclick=()=>{rDay=d;render()};t.appendChild(b)});v.appendChild(t);
+ if(!days.includes(rDay)){const n=nowEvent(D.rundown);rDay=n?n.day:days[0]}
+ v.appendChild(tabsBar(days.map(d=>[d,d||'Rundown']),rDay,d=>{rDay=d;render()}));
+ const now=nowEvent(D.rundown);
+ if(now&&now.day===rDay){const h=el('div','hl c-amber');h.appendChild(icon('clock','amber'));const b=el('div');b.appendChild(el('div','k','SEDANG BERLANGSUNG'));b.appendChild(el('div','v',now.title));h.appendChild(b);h.appendChild(el('div','r',now.time));v.appendChild(h)}
+ const st=el('div','stack');v.appendChild(st);
  D.rundown.filter(r=>r.day===rDay).forEach(r=>{
-  const e=el('div','ev');e.appendChild(el('div','t',r.time));
-  const b=el('div');b.appendChild(el('b','',r.title));
-  if(r.note)b.appendChild(el('small','',r.note));
-  if(r.place)b.appendChild(el('small','',r.place));
-  e.appendChild(b);v.appendChild(e);
+  const [i,c]=evIcon(r.title);const row=el('div','row');row.appendChild(icon(i,c,true));
+  const b=el('div','b');b.appendChild(el('b','',r.title));const s=[r.note,r.place].filter(Boolean).join(' · ');if(s)b.appendChild(el('small','',s));row.appendChild(b);
+  row.appendChild(el('div','t',r.time));st.appendChild(row);
  });
 }
-function rKelompok(v){
- const t=el('div','tabs');[['anggota','Tim saya'],['klasemen','Skor'],['input','Input']].forEach(([k,n])=>{const b=el('button','',n);b.type='button';b.setAttribute('aria-pressed',k===kSeg);b.onclick=()=>{kSeg=k;render()};t.appendChild(b)});v.appendChild(t);
+
+/* TEAM */
+function rTeam(v){
+ v.appendChild(tabsBar([['tim','Tim saya'],['skor','Skor'],['pb','Paintball'],['input','Input']],kSeg,k=>{kSeg=k;render()}));
  const body=el('div');v.appendChild(body);
- if(kSeg==='anggota')kAnggota(body);else if(kSeg==='klasemen')kKlasemen(body);else kInput(body);
+ ({tim:tTim,skor:tSkor,pb:tPb,input:kInput})[kSeg](body);
 }
-function kAnggota(v){
- const s=el('input');s.type='search';s.placeholder='Cari nama kamu';s.value=q;s.style.marginTop='16px';s.setAttribute('aria-label','Cari nama');
- v.appendChild(s);
+function tTim(v){
+ const s=el('input');s.type='search';s.placeholder='Cari nama Anda';s.value=q;s.style.marginTop='18px';s.setAttribute('aria-label','Cari nama');v.appendChild(s);
  const list=el('div');v.appendChild(list);
- s.oninput=()=>{q=s.value;renderKel(list)};renderKel(list);
+ s.oninput=()=>{q=s.value;draw()};draw();
+ function draw(){
+  list.textContent='';const nd=q.trim().toLowerCase();
+  const rows=D.kelompok.filter(r=>!nd||(r.name+' '+r.group).toLowerCase().includes(nd));
+  if(!rows.length){list.appendChild(el('div','empty',D.kelompok.length?'Tidak ada yang cocok.':'Data tim belum diisi panitia.'));return}
+  const gs={};rows.forEach(r=>{(gs[r.group||'Lainnya']=gs[r.group||'Lainnya']||[]).push(r)});
+  Object.keys(gs).forEach(g=>{
+   const w=el('section','tm');const h=el('div','tmh');h.appendChild(el('b','',g));const note=(D.kelompok.find(r=>r.group===g&&r.note)||{}).note;if(note)h.appendChild(el('small','',note));w.appendChild(h);
+   const b=el('div','tmb');gs[g].forEach(r=>{const m=el('div','mem'+(nd&&r.name.toLowerCase().includes(nd)?' me':''));m.appendChild(el('div','av',initials(r.name)));m.appendChild(el('span','',r.name));b.appendChild(m)});w.appendChild(b);list.appendChild(w);
+  });
+ }
 }
-function renderKel(list){
- list.textContent='';
- const needle=q.trim().toLowerCase();
- const rows=D.kelompok.filter(r=>!needle||(r.name+' '+r.group+' '+r.sphere).toLowerCase().includes(needle));
- if(!rows.length){list.appendChild(el('div','empty',D.kelompok.length?'Tidak ada yang cocok.':'Data tim belum diisi panitia.'));return}
- const groups={};rows.forEach(r=>{(groups[r.group||'Lainnya']=groups[r.group||'Lainnya']||[]).push(r)});
- Object.keys(groups).forEach(g=>{
-  const h=el('div','gh');h.appendChild(el('h3','',g));h.appendChild(el('span','mute',groups[g].length+' orang'));list.appendChild(h);
-  const note=(groups[g].find(r=>r.note)||{}).note;if(note)list.appendChild(el('p','gd',note));
-  groups[g].forEach(r=>{const m=el('div','mem');m.appendChild(el('b','',r.name));if(r.sphere)m.appendChild(el('small','',r.sphere));list.appendChild(m)});
- });
-}
+function ranked(k){return k.groups.slice().sort((a,b)=>b.total-a.total||a.name.localeCompare(b.name))}
 function pairs(k,taken){
- const free=k.groups.slice().sort((a,b)=>b.total-a.total||a.name.localeCompare(b.name)).map(g=>g.name).filter(n=>!taken.includes(n));
+ const free=ranked(k).map(g=>g.name).filter(n=>!taken.includes(n));
  const out=[];for(let i=0;i+1<free.length;i+=2)out.push([free[i],free[i+1]]);
- return {pairs:out,left:free.length%2?free[free.length-1]:''};
+ return{pairs:out,left:free.length%2?free[free.length-1]:''};
 }
-function kKlasemen(v){
+function tSkor(v){
+ const box=el('div');v.appendChild(box);box.appendChild(el('p','mute','Memuat...'));
+ call('klasemen').then(k=>{
+  box.textContent='';box.appendChild(el('p','mute','Skor dari game pagi. Peringkat menentukan lawan paintball.'));
+  if(!k.groups.length){box.appendChild(el('div','empty','Belum ada tim.'));return}
+  const st=el('div','stack');
+  ranked(k).forEach((g,i)=>{const r=el('div','rk');r.appendChild(el('div','n',String(i+1)));r.appendChild(el('b','',g.name));r.appendChild(el('div','s',String(g.total)));st.appendChild(r)});box.appendChild(st);
+  box.appendChild(el('h2','','Poin per game'));
+  if(!k.games.length)box.appendChild(el('p','mute','Belum ada game yang dinilai.'));
+  const st2=el('div','stack');k.games.forEach(gm=>{const w=el('div','vs');w.appendChild(el('b','',gm.name));const p=el('div');gm.scores.forEach(s=>p.appendChild(el('span','pill',s.group+': '+s.points)));w.appendChild(p);st2.appendChild(w)});box.appendChild(st2);
+ }).catch(e=>{box.textContent='';box.appendChild(el('div','msg err','Gagal memuat: '+errMsg(e)))});
+}
+function tPb(v){
  const box=el('div');v.appendChild(box);box.appendChild(el('p','mute','Memuat...'));
  call('klasemen').then(k=>{
   box.textContent='';
-  box.appendChild(el('h2','','Skor game pagi'));
-  box.appendChild(el('p','mute','Peringkat menentukan lawan di paintball.'));
-  if(!k.groups.length){box.appendChild(el('div','empty','Belum ada tim.'));return}
-  const h=el('div','tbl h');['#','Tim','Poin'].forEach((t,i)=>h.appendChild(el('span',i===2?'r':'',t)));box.appendChild(h);
-  const ord=k.groups.slice().sort((a,b)=>b.total-a.total||a.name.localeCompare(b.name));
-  ord.forEach((g,i)=>{const r=el('div','tbl');r.appendChild(el('span','n',String(i+1)));r.appendChild(el('b','',g.name));r.appendChild(el('span','tt',String(g.total)));box.appendChild(r)});
-  box.appendChild(el('h2','','Paintball'));
-  const taken=[];
-  k.matches.forEach(x=>{taken.push(x.a,x.b);
-   const r=el('div','vs');const row=el('div','row');row.appendChild(el('b','',x.a+' vs '+x.b));row.appendChild(el('i','',x.winner&&x.result!=='Seri'?'SELESAI':'BELUM ADA HASIL'));r.appendChild(row);
-   if(x.winner&&x.result!=='Seri'){const w=el('div');w.appendChild(el('span','mute','Pemenang: '));w.appendChild(el('b','',x.winner));r.appendChild(w)}
-   box.appendChild(r)});
+  const taken=[];const st=el('div','stack');
+  k.matches.forEach(x=>{taken.push(x.a,x.b);const r=el('div','vs');const t=el('div','t');t.appendChild(el('b','',x.a+' vs '+x.b));const done=x.winner&&x.result!=='Seri';t.appendChild(el('i','',done?'SELESAI':'BELUM ADA HASIL'));r.appendChild(t);
+   if(done)r.appendChild(el('small','','Pemenang: '+x.winner));st.appendChild(r)});
+  if(k.matches.length){box.appendChild(el('h2','','Pertandingan'));box.appendChild(st)}
   const p=pairs(k,taken);
-  if(p.pairs.length&&ord.some(g=>g.total>0)){
-   box.appendChild(el('p','mute','Usulan lawan berdasarkan peringkat (belum resmi):'));
-   p.pairs.forEach(([a,b])=>{const r=el('div','vs');const row=el('div','row');row.appendChild(el('b','',a+' vs '+b));row.appendChild(el('i','','USULAN'));r.appendChild(row);box.appendChild(r)});
+  if(p.pairs.length&&k.groups.some(g=>g.total>0)){
+   box.appendChild(el('h2','','Usulan lawan'));box.appendChild(el('p','mute','Berdasarkan peringkat skor pagi. Belum resmi.'));
+   const s2=el('div','stack');p.pairs.forEach(([a,b])=>{const r=el('div','vs');const t=el('div','t');t.appendChild(el('b','',a+' vs '+b));t.appendChild(el('i','','USULAN'));r.appendChild(t);s2.appendChild(r)});box.appendChild(s2);
    if(p.left)box.appendChild(el('p','mute',p.left+' belum dapat lawan.'));
-  }else if(!k.matches.length){box.appendChild(el('div','empty','Lawan paintball ditentukan setelah game pagi selesai.'))}
-  box.appendChild(el('h2','','Poin per game'));
-  if(!k.games.length)box.appendChild(el('p','mute','Belum ada game yang dinilai.'));
-  k.games.forEach(gm=>{const w=el('div','vs');w.appendChild(el('b','',gm.name));const p2=el('div');gm.scores.forEach(s=>p2.appendChild(el('span','pill',s.group+': '+s.points)));w.appendChild(p2);box.appendChild(w)});
+  }else if(!k.matches.length)box.appendChild(el('div','empty','Lawan paintball ditentukan setelah game pagi selesai.'));
  }).catch(e=>{box.textContent='';box.appendChild(el('div','msg err','Gagal memuat: '+errMsg(e)))});
 }
 function kInput(v){
  const c=el('div');v.appendChild(c);c.appendChild(el('h2','','Input skor (panitia)'));
  if(!pin){
   c.appendChild(el('p','mute','Masukkan PIN panitia untuk mencatat skor.'));
-  const i=el('input');i.type='password';i.placeholder='PIN panitia';i.inputMode='numeric';i.setAttribute('aria-label','PIN panitia');c.appendChild(i);
+  const i=el('input');i.type='password';i.placeholder='PIN panitia';i.inputMode='numeric';i.setAttribute('aria-label','PIN panitia');i.style.marginTop='12px';c.appendChild(i);
   const b=el('button','go','Buka');b.type='button';c.appendChild(b);
   b.onclick=()=>{b.disabled=true;call('log',{pin:i.value}).then(()=>{pin=i.value;try{sessionStorage.setItem('pn_pin',pin)}catch(e){}render()}).catch(e=>{b.disabled=false;msg(c,errMsg(e),false)})};
   return;
@@ -206,13 +247,13 @@ function kInput(v){
  if(iSeg==='game')iGame(body);else if(iSeg==='pb')iPb(body);else iLog(body);
  const out=el('button','del','Kunci input');out.type='button';out.style.marginTop='22px';out.onclick=()=>{pin='';try{sessionStorage.removeItem('pn_pin')}catch(e){}render()};c.appendChild(out);
 }
+let iSeg='game';
 function iGame(b){
  const lab=el('label','l','Nama game');lab.htmlFor='gname';b.appendChild(lab);
  const n=el('input');n.type='text';n.id='gname';n.placeholder='mis. Estafet Balon';n.setAttribute('list','glist');b.appendChild(n);
  const dl=el('datalist');dl.id='glist';b.appendChild(dl);
  const rows=el('div');rows.style.marginTop='10px';b.appendChild(rows);
- const inputs={};
- let known={};
+ const inputs={};let known={};
  D.groups.forEach(g=>{const r=el('div','grow');r.appendChild(el('b','',g));const i=el('input');i.type='number';i.inputMode='decimal';i.placeholder='poin';i.setAttribute('aria-label','Poin '+g);r.appendChild(i);inputs[g]=i;rows.appendChild(r)});
  if(!D.groups.length)rows.appendChild(el('div','empty','Isi tim di tab Kelompok pada sheet dulu.'));
  call('klasemen').then(k=>{k.games.forEach(gm=>{known[gm.name.toLowerCase()]=gm;const o=el('option');o.value=gm.name;dl.appendChild(o)})}).catch(()=>{});
@@ -230,7 +271,7 @@ function iPb(b){
  const sug=el('div');b.appendChild(sug);
  const sa=mk('pa','Tim A'),sb=mk('pb2','Tim B');
  b.appendChild(el('label','l','Pemenang'));
- const rad=el('div','radios');b.appendChild(rad);
+ const rad=el('div','radios');rad.style.marginTop='0';b.appendChild(rad);
  function drawR(){rad.textContent='';[['A',(sa.value||'Tim A')+' menang'],['B',(sb.value||'Tim B')+' menang']].forEach(([k,t])=>{const x=el('button','',t);x.type='button';x.setAttribute('aria-pressed',R===k);x.onclick=()=>{R=k;drawR()};rad.appendChild(x)})}
  drawR();sa.onchange=drawR;sb.onchange=drawR;
  call('klasemen').then(k=>{
@@ -248,69 +289,99 @@ function iLog(b){
   b.textContent='';
   const del=(kind,id,row)=>{const x=el('button','del','Hapus');x.type='button';x.onclick=()=>{x.disabled=true;call('hapus',{pin,kind,id}).then(()=>row.remove()).catch(e=>{x.disabled=false;msg(b,errMsg(e),false)})};return x};
   b.appendChild(el('h2','','Pertandingan paintball'));
-  if(!l.matches.length)b.appendChild(el('div','mute','Belum ada.'));
+  if(!l.matches.length)b.appendChild(el('p','mute','Belum ada.'));
   l.matches.forEach(m=>{const r=el('div','logrow');r.appendChild(el('span','',m.a+' vs '+m.b+' · '+(m.result==='Seri'?'Seri':m.winner+' menang')));r.appendChild(del('pb',m.id,r));b.appendChild(r)});
   b.appendChild(el('h2','','Poin game (40 terbaru)'));
-  if(!l.games.length)b.appendChild(el('div','mute','Belum ada.'));
+  if(!l.games.length)b.appendChild(el('p','mute','Belum ada.'));
   l.games.forEach(m=>{const r=el('div','logrow');r.appendChild(el('span','',m.game+' · '+m.group+' · '+m.points));r.appendChild(del('game',m.id,r));b.appendChild(r)});
  }).catch(e=>{b.textContent='';msg(b,errMsg(e),false)});
 }
-function rKaraoke(v){
- const c=el('div');v.appendChild(c);
- c.appendChild(el('p','mute','Anonim. Satu penyanyi hanya bisa dinilai satu kali dari perangkat ini. Skor 1 sampai 10.'));
+
+/* GROW IDOL */
+function rIdol(v){
+ v.appendChild(tabsBar([['nilai','Nilai'],['rank','Ranking live',gSeg==='rank']],gSeg,k=>{gSeg=k;render()}));
+ const body=el('div');v.appendChild(body);
+ if(gSeg==='nilai')gNilai(body);else gRank(body);
+}
+function gNilai(c){
  if(!D.open){c.appendChild(el('div','msg err','Penilaian sedang ditutup panitia.'));return}
  const done=voted();
- const lab=el('label','l','Penyanyi yang sedang tampil');lab.htmlFor='sg';c.appendChild(lab);
+ const lab=el('label','l','Penilaian untuk siapa');lab.htmlFor='sg';c.appendChild(lab);
  const s=el('select');s.id='sg';
  const o0=el('option','','Pilih nama penyanyi');o0.value='';s.appendChild(o0);
- D.singers.forEach(x=>{const o=el('option','',(done.includes(x.name)?'✓ ':'')+x.name+(x.song?' · '+x.song:''));o.value=x.name;s.appendChild(o)});
+ D.singers.forEach(x=>{const o=el('option','',(done.includes(x.name)?'✓ ':'')+x.name);o.value=x.name;s.appendChild(o)});
  s.value=chosen;c.appendChild(s);
- const box=el('div');c.appendChild(box);
- const btn=el('button','go','Kirim penilaian');btn.type='button';btn.disabled=true;
- [['suara','Suara'],['gaya','Gaya'],['interaksi','Interaksi penonton']].forEach(([k,t])=>{
-  const w=el('div','cat');const h=el('div','h');h.appendChild(el('b','',t));const val=el('span','',sel[k]||'-');h.appendChild(val);w.appendChild(h);
-  const ch=el('div','chips');
-  for(let i=1;i<=10;i++){const b=el('button','',String(i));b.type='button';b.setAttribute('aria-pressed',sel[k]===i);
-   b.onclick=()=>{sel[k]=i;val.textContent=i;ch.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));check()};ch.appendChild(b)}
-  w.appendChild(ch);box.appendChild(w);
- });
- function check(){btn.disabled=!(chosen&&sel.suara&&sel.gaya&&sel.interaksi&&!voted().includes(chosen))}
- s.onchange=()=>{chosen=s.value;const m=c.querySelector('.msg');if(m)m.remove();if(voted().includes(chosen))msg(c,'Kamu sudah menilai '+chosen+'.',false);check()};
+ const sc=el('div','score');sc.appendChild(el('div','k','SKOR ANDA'));const num=el('div','n',score||'-');sc.appendChild(num);sc.appendChild(el('div','s','Suara, gaya, dan interaksi penonton'));c.appendChild(sc);
+ const ch=el('div','chips');
+ const btn=el('button','go','Kirim nilai');btn.type='button';
+ for(let i=1;i<=10;i++){const b=el('button','',String(i));b.type='button';b.setAttribute('aria-pressed',score===i);b.onclick=()=>{score=i;num.textContent=i;ch.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));check()};ch.appendChild(b)}
+ c.appendChild(ch);
+ function check(){btn.disabled=!(chosen&&score&&!voted().includes(chosen))}
+ s.onchange=()=>{chosen=s.value;const m=c.querySelector('.msg');if(m)m.remove();if(voted().includes(chosen))msg(c,'Anda sudah menilai '+chosen+'.',false);check()};
  btn.onclick=()=>{
   btn.disabled=true;btn.textContent='Mengirim...';
-  call('rate',{singer:chosen,suara:sel.suara,gaya:sel.gaya,interaksi:sel.interaksi,device:dev}).then(()=>{
-   addVoted(chosen);const n=chosen;chosen='';sel={suara:0,gaya:0,interaksi:0};rKaraokeDone(n);
-  }).catch(e=>{const m=errMsg(e);if(/sudah menilai/.test(m))addVoted(chosen);msg(c,m,false);btn.textContent='Kirim penilaian';check()});
+  call('rate',{singer:chosen,suara:score,gaya:score,interaksi:score,device:dev}).then(()=>{
+   addVoted(chosen);const n=chosen;chosen='';score=0;gDone(n);
+  }).catch(e=>{const m=errMsg(e);if(/sudah menilai/.test(m))addVoted(chosen);msg(c,m,false);btn.textContent='Kirim nilai';check()});
  };
- c.appendChild(btn);check();
+ c.appendChild(btn);btn.disabled=true;check();
 }
-function rKaraokeDone(n){
+function gDone(n){
  const v=$('#view');v.textContent='';
- v.appendChild(el('h2','','Terkirim'));
- v.appendChild(el('div','msg okm','Penilaian untuk '+n+' sudah tercatat. Terima kasih!'));
+ v.appendChild(tabsBar([['nilai','Nilai'],['rank','Ranking live']],'nilai',k=>{gSeg=k;render()}));
+ v.appendChild(el('div','msg okm','Nilai untuk '+n+' sudah tercatat. Terima kasih!'));
  const b=el('button','go','Nilai penyanyi berikutnya');b.type='button';b.onclick=render;v.appendChild(b);
 }
-function rTop(v){
- const c=el('div');v.appendChild(c);
- c.appendChild(el('p','mute','Memuat peringkat...'));
- call('top').then(r=>{
-  c.textContent='';
-  if(r.hidden){c.appendChild(el('div','empty','Peringkat Grow Idol akan diumumkan panitia di akhir acara.'));return}
-  if(!r.list.length){c.appendChild(el('div','empty','Belum ada penilaian masuk.'));return}
-  const f=r.list[0];
-  const lead=el('div','lead');const lt=el('div');lt.appendChild(el('small','','PERINGKAT 1'));lt.appendChild(el('b','',f.name));lead.appendChild(lt);lead.appendChild(el('div','big',fm(f.total)));c.appendChild(lead);
-  c.appendChild(el('p','mute',r.list.length+' penyanyi dinilai. Skor = rata-rata Suara, Gaya, dan Interaksi (maks 10).'));
-  r.list.forEach((x,i)=>{
-   const row=el('div','rank');row.appendChild(el('div','no',String(i+1)));
-   const m=el('div');m.appendChild(el('b','',x.name));
-   m.appendChild(el('small','','Suara '+fm(x.suara)+' · Gaya '+fm(x.gaya)+' · Interaksi '+fm(x.interaksi)+' · '+x.n+' penilai'));row.appendChild(m);
-   row.appendChild(el('div','tot',fm(x.total)));c.appendChild(row);
+function gRank(c){
+ const box=el('div');c.appendChild(box);
+ function load(){
+  call('top').then(r=>{
+   box.textContent='';
+   if(r.hidden){box.appendChild(el('div','empty','Ranking Grow Idol akan dibuka panitia.'));return}
+   if(!r.list.length){box.appendChild(el('div','empty','Belum ada penilaian masuk.'));return}
+   const f=r.list[0];
+   const h=el('div','hl c-purple');h.appendChild(icon('trophy','purple'));const b=el('div');b.appendChild(el('div','k','PERINGKAT 1'));b.appendChild(el('div','v',f.name));h.appendChild(b);h.appendChild(el('div','r',fm(f.total)));box.appendChild(h);
+   box.appendChild(el('p','mute','Update otomatis tiap 5 detik · '+r.list.length+' penyanyi dinilai'));
+   const st=el('div','stack');r.list.slice(1).forEach((x,i)=>{const row=el('div','rk');row.appendChild(el('div','n',String(i+2)));const m=el('div');m.appendChild(el('b','',x.name));m.appendChild(el('small','',x.n+' penilai'));row.appendChild(m);row.appendChild(el('div','s',fm(x.total)));st.appendChild(row)});box.appendChild(st);
+  }).catch(e=>{box.textContent='';box.appendChild(el('div','msg err','Gagal memuat: '+errMsg(e)))});
+ }
+ box.appendChild(el('p','mute','Memuat peringkat...'));load();
+ timer=setInterval(()=>{if(!document.hidden)load()},5000);
+}
+
+/* KAMAR */
+const TYPES=[['Deluxe Room','blue'],['Deluxe Riverview','teal'],['Family Riverview','amber'],['Family Barrack','orange'],['Driam Suite','purple'],['Glamping','green'],['Deluxe Luxcamp','pink']];
+function rKamar(v){
+ const s=el('input');s.type='search';s.placeholder='Cari nama atau nomor kamar';s.value=kq;s.style.marginTop='18px';s.setAttribute('aria-label','Cari kamar');v.appendChild(s);
+ const list=el('div');v.appendChild(list);
+ if(!K){list.appendChild(el('p','mute','Memuat kamar...'));
+  call('kamar').then(d=>{K=d.rooms||[];render()}).catch(e=>{list.textContent='';list.appendChild(el('div','msg err','Data kamar belum tersedia ('+errMsg(e)+'). Perbarui Apps Script ke versi terbaru.'))});return}
+ s.oninput=()=>{kq=s.value;draw()};draw();
+ function draw(){
+  list.textContent='';const nd=kq.trim().toLowerCase();
+  const rooms=K.filter(r=>!nd||(r.no+' '+r.names.join(' ')).toLowerCase().includes(nd));
+  if(!rooms.length){list.appendChild(el('div','empty',K.length?'Tidak ada yang cocok.':'Data kamar belum diisi.'));return}
+  if(nd){const f=rooms[0];const h=el('div','hl c-green');h.appendChild(icon('bed','green'));const b=el('div');b.appendChild(el('div','k','KAMAR DITEMUKAN'));b.appendChild(el('div','v','Kamar '+f.no));b.appendChild(el('div','s',f.type));h.appendChild(b);list.appendChild(h)}
+  else{const h=el('div','hl c-green');h.appendChild(icon('bed','green'));const b=el('div');b.appendChild(el('div','k','KAMAR ANDA'));b.appendChild(el('div','v','Cari nama Anda di kotak atas'));h.appendChild(b);list.appendChild(h)}
+  const order=TYPES.map(t=>t[0]);
+  const types=[...new Set(rooms.map(r=>r.type))].sort((a,b)=>{const x=order.indexOf(a),y=order.indexOf(b);return (x<0?99:x)-(y<0?99:y)});
+  types.forEach(t=>{
+   const col=(TYPES.find(x=>x[0]===t)||[0,'gray'])[1];const rs=rooms.filter(r=>r.type===t).sort((a,b)=>a.no.localeCompare(b.no,undefined,{numeric:true}));
+   const sec=el('div','sec');sec.appendChild(icon('bed',col));sec.appendChild(el('b','',t));sec.appendChild(el('span','',rs.length+' kamar'));list.appendChild(sec);
+   const g=el('div','rooms');
+   rs.forEach(r=>{
+    const hit=nd&&(r.no+' '+r.names.join(' ')).toLowerCase().includes(nd);
+    const w=el('div','room'+(hit?' hit':''));const h=el('div','rh c-'+col);h.appendChild(el('b','',r.no));h.appendChild(el('small','',r.type));w.appendChild(h);
+    const n=el('div','rn');r.names.forEach(x=>n.appendChild(el('div','nm',x)));
+    if(r.family)n.appendChild(el('div','nm fam','Keluarga ('+r.family+' orang)'));
+    w.appendChild(n);g.appendChild(w);
+   });
+   list.appendChild(g);
   });
-  const rf=el('button','ref','Perbarui');rf.type='button';rf.onclick=render;c.appendChild(rf);
- }).catch(e=>{c.textContent='';c.appendChild(el('div','msg err','Gagal memuat: '+errMsg(e)))});
+ }
 }
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render();window.scrollTo(0,0)});
-call('data').then(d=>{D=d;render()}).catch(e=>{$('#view').textContent='';const c=el('div','card');c.appendChild(el('div','msg err','Gagal memuat data: '+errMsg(e)));const b=el('button','go','Coba lagi');b.onclick=()=>location.reload();c.appendChild(b);$('#view').appendChild(c)});
+call('data').then(d=>{D=d;render()}).catch(e=>{$('#view').textContent='';const c=el('div');c.appendChild(el('div','msg err','Gagal memuat data: '+errMsg(e)));const b=el('button','go','Coba lagi');b.onclick=()=>location.reload();c.appendChild(b);$('#view').appendChild(c)});
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script>
 </body></html>
