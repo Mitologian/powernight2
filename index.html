@@ -18,8 +18,9 @@ body{margin:0;-webkit-tap-highlight-color:transparent;background:#fff;color:var(
 .banner svg{position:absolute;inset:0;width:100%;height:100%}
 .banner>*:not(svg){position:relative}
 .eyebrow{font-size:11px;font-weight:600;letter-spacing:.16em}
-h1{font-size:30px;line-height:1.1;margin:6px 0 0;font-weight:600}
-.sub{font-size:15px;font-weight:500;margin-top:10px;margin-bottom:6px}
+h1{font-size:30px;line-height:1.1;margin:6px 0 0;font-weight:600;display:flex;align-items:center;gap:16px}
+.dm{width:30px;height:30px;background:#fff;border-radius:6px;transform:rotate(45deg);display:flex;align-items:center;justify-content:center;flex:none;margin-left:4px}.dm b{transform:rotate(-45deg);color:var(--red);font-size:18px;font-weight:600}
+.sub{display:inline-block;font-size:14px;font-weight:500;margin-top:14px;margin-bottom:6px;border:1px solid rgba(255,255,255,.65);border-radius:999px;padding:4px 14px}
 main{max-width:560px;margin:0 auto;padding:0 20px 24px}
 #view>*{animation:pop .2s ease both}@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}@media (prefers-reduced-motion:reduce){#view>*{animation:none}}
 .tabs{display:flex;border-bottom:1px solid var(--line);margin:0 -20px;padding:0 20px;position:sticky;top:0;background:#fff;z-index:5}
@@ -96,8 +97,8 @@ label.l{display:block;font-size:12px;letter-spacing:.08em;text-transform:upperca
 .nm.fam{background:#fff;border:1px dashed #bdbdbd;color:var(--purple-d);font-weight:500}
 </style></head>
 <body>
-<header class="banner"><svg viewBox="0 0 360 120" preserveAspectRatio="xMaxYMid slice" aria-hidden="true"><defs><symbol id="gem" viewBox="0 0 100 90"><path d="M22 0H78L100 30L50 90L0 30Z" fill="#fff" fill-opacity=".10"/><path d="M22 0H78L100 30L50 90L0 30ZM0 30H100M35 30L22 0M65 30L78 0M35 30L50 90M65 30L50 90" fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="2" stroke-linejoin="round"/></symbol></defs><use href="#gem" x="236" y="10" width="112" height="101"/></svg>
-<div class="eyebrow">BNI GROW · 27-28 NOV</div><h1>Power Night 2</h1><div class="sub" id="sub">Rundown</div></header>
+<header class="banner"><svg viewBox="0 0 360 120" preserveAspectRatio="xMaxYMid slice" aria-hidden="true"><g transform="translate(250 -8) scale(1.8)"><path d="M0 28L20 0L25 28Z" fill="#fff" fill-opacity=".22"/><path d="M20 0L50 0L25 28Z" fill="#fff" fill-opacity=".10"/><path d="M25 28L50 0L50 28Z" fill="#fff" fill-opacity=".30"/><path d="M50 0L75 28L50 28Z" fill="#000" fill-opacity=".06"/><path d="M50 0L80 0L75 28Z" fill="#fff" fill-opacity=".16"/><path d="M80 0L100 28L75 28Z" fill="#000" fill-opacity=".12"/><path d="M0 28L25 28L50 92Z" fill="#000" fill-opacity=".10"/><path d="M25 28L50 28L50 92Z" fill="#fff" fill-opacity=".20"/><path d="M50 28L75 28L50 92Z" fill="#000" fill-opacity=".20"/><path d="M75 28L100 28L50 92Z" fill="#000" fill-opacity=".30"/></g></svg>
+<div class="eyebrow">BNI GROW · 27-28 NOV</div><h1>Power Night<span class="dm"><b>2</b></span></h1><div class="sub" id="sub">Rundown</div></header>
 <main id="view"><div class="empty">Memuat...</div></main>
 <nav role="tablist">
 <button role="tab" data-t="rundown" aria-selected="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4"/></svg><span>Rundown</span></button>
