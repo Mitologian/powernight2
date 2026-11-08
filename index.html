@@ -95,6 +95,14 @@ label.l{display:block;font-size:12px;letter-spacing:.08em;text-transform:upperca
 .rn{padding:10px;display:grid;gap:8px}
 .nm{background:#f4f4f4;border-radius:8px;padding:8px 10px;font-weight:500;font-size:13px;line-height:1.2;min-height:46px;display:flex;align-items:center}
 .nm.fam{background:#fff;border:1px dashed #bdbdbd;color:var(--purple-d);font-weight:500}
+.wheelw{position:relative;width:min(300px,100%);margin:22px auto 0}
+.wheel{width:100%;height:auto;display:block;border-radius:50%;box-shadow:0 4px 18px rgba(0,0,0,.12)}
+.ptr{position:absolute;left:50%;top:-10px;width:0;height:0;margin-left:-12px;border-left:12px solid transparent;border-right:12px solid transparent;border-top:22px solid var(--fg);filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
+.vsb{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:stretch}
+.vsm{align-self:center;font-size:12px;font-weight:600;color:var(--mute);letter-spacing:.08em}
+.side{background:#f4f4f4;border-radius:10px;padding:12px 10px;display:flex;flex-direction:column;justify-content:center;text-align:center;min-height:64px}
+.side b{font-size:14px;font-weight:600;line-height:1.25}.side small{font-size:11px;font-weight:600;letter-spacing:.1em;margin-top:4px}
+.side.win{background:var(--green-bg);color:var(--green-d)}.side.lose{opacity:.55}
 </style></head>
 <body>
 <header class="banner"><svg viewBox="0 0 360 120" preserveAspectRatio="xMaxYMid slice" aria-hidden="true"><g transform="translate(250 -8) scale(1.8)"><path d="M0 28L20 0L25 28Z" fill="#fff" fill-opacity=".22"/><path d="M20 0L50 0L25 28Z" fill="#fff" fill-opacity=".10"/><path d="M25 28L50 0L50 28Z" fill="#fff" fill-opacity=".30"/><path d="M50 0L75 28L50 28Z" fill="#000" fill-opacity=".06"/><path d="M50 0L80 0L75 28Z" fill="#fff" fill-opacity=".16"/><path d="M80 0L100 28L75 28Z" fill="#000" fill-opacity=".12"/><path d="M0 28L25 28L50 92Z" fill="#000" fill-opacity=".10"/><path d="M25 28L50 28L50 92Z" fill="#fff" fill-opacity=".20"/><path d="M50 28L75 28L50 92Z" fill="#000" fill-opacity=".20"/><path d="M75 28L100 28L50 92Z" fill="#000" fill-opacity=".30"/></g></svg>
@@ -180,9 +188,9 @@ function rRundown(v){
 
 /* TEAM */
 function rTeam(v){
- v.appendChild(tabsBar([['tim','Tim saya'],['skor','Skor'],['pb','Paintball'],['input','Input']],kSeg,k=>{kSeg=k;render()}));
+ v.appendChild(tabsBar([['tim','Tim saya'],['undi','Undi lawan'],['lawan','Pertandingan']],kSeg,k=>{kSeg=k;render()}));
  const body=el('div');v.appendChild(body);
- ({tim:tTim,skor:tSkor,pb:tPb,input:kInput})[kSeg](body);
+ ({tim:tTim,undi:tUndi,lawan:tLawan})[kSeg](body);
 }
 function tTim(v){
  const s=el('input');s.type='search';s.placeholder='Cari nama Anda';s.value=q;s.style.marginTop='18px';s.setAttribute('aria-label','Cari nama');v.appendChild(s);
@@ -199,103 +207,96 @@ function tTim(v){
   });
  }
 }
-function ranked(k){return k.groups.slice().sort((a,b)=>b.total-a.total||a.name.localeCompare(b.name))}
-function pairs(k,taken){
- const free=ranked(k).map(g=>g.name).filter(n=>!taken.includes(n));
- const out=[];for(let i=0;i+1<free.length;i+=2)out.push([free[i],free[i+1]]);
- return{pairs:out,left:free.length%2?free[free.length-1]:''};
+const shortN=n=>{const m=String(n).match(/^team\s*\d+/i);return m?m[0]:String(n).split(/\s+/).slice(0,2).join(' ')};
+function pinGate(c,ok,txt){
+ c.appendChild(el('p','mute',txt));
+ const i=el('input');i.type='password';i.placeholder='PIN panitia';i.inputMode='numeric';i.setAttribute('aria-label','PIN panitia');i.style.marginTop='12px';c.appendChild(i);
+ const b=el('button','go','Buka');b.type='button';c.appendChild(b);
+ b.onclick=()=>{b.disabled=true;call('log',{pin:i.value}).then(()=>{pin=i.value;try{sessionStorage.setItem('pn_pin',pin)}catch(e){}ok()}).catch(e=>{b.disabled=false;msg(c,errMsg(e),false)})};
 }
-function tSkor(v){
- const box=el('div');v.appendChild(box);box.appendChild(el('p','mute','Memuat...'));
+const WCOL=['#C8102E','#f6c453','#35a99a','#4b8bd6','#7c4dc4','#e8833a','#d9568f','#2e9b5f'];
+let uA='',spinning=false,rot=0;
+function rnd(n){const a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]%n}
+function drawWheel(cv,names){
+ const S=cv.width,ctx=cv.getContext('2d'),r=S/2;ctx.clearRect(0,0,S,S);
+ if(!names.length){ctx.fillStyle='#f1f1f1';ctx.beginPath();ctx.arc(r,r,r-4,0,7);ctx.fill();ctx.fillStyle='#777';ctx.font='500 26px Inter,sans-serif';ctx.textAlign='center';ctx.fillText('Pilih tim pertama',r,r+8);return}
+ const n=names.length,a=2*Math.PI/n;
+ names.forEach((nm,i)=>{
+  ctx.beginPath();ctx.moveTo(r,r);ctx.arc(r,r,r-4,-Math.PI/2+i*a,-Math.PI/2+(i+1)*a);ctx.closePath();ctx.fillStyle=WCOL[i%WCOL.length];ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=4;ctx.stroke();
+  ctx.save();ctx.translate(r,r);ctx.rotate(-Math.PI/2+(i+.5)*a);ctx.textAlign='right';ctx.fillStyle=(i%WCOL.length===1)?'#3a2a00':'#fff';ctx.font='600 '+(n>8?22:28)+'px Inter,sans-serif';ctx.fillText(shortN(nm),r-26,9);ctx.restore();
+ });
+ ctx.beginPath();ctx.arc(r,r,34,0,7);ctx.fillStyle='#fff';ctx.fill();
+}
+function tUndi(v){
+ rot=0;spinning=false;
+ const c=el('div');v.appendChild(c);
+ if(!pin){pinGate(c,render,'Masukkan PIN panitia untuk mengundi lawan.');return}
+ c.appendChild(el('p','mute','Memuat...'));
  call('klasemen').then(k=>{
-  box.textContent='';box.appendChild(el('p','mute','Skor dari game pagi. Peringkat menentukan lawan paintball.'));
-  if(!k.groups.length){box.appendChild(el('div','empty','Belum ada tim.'));return}
-  const st=el('div','stack');
-  ranked(k).forEach((g,i)=>{const r=el('div','rk');r.appendChild(el('div','n',String(i+1)));r.appendChild(el('b','',g.name));r.appendChild(el('div','s',String(g.total)));st.appendChild(r)});box.appendChild(st);
-  box.appendChild(el('h2','','Poin per game'));
-  if(!k.games.length)box.appendChild(el('p','mute','Belum ada game yang dinilai.'));
-  const st2=el('div','stack');k.games.forEach(gm=>{const w=el('div','vs');w.appendChild(el('b','',gm.name));const p=el('div');gm.scores.forEach(s=>p.appendChild(el('span','pill',s.group+': '+s.points)));w.appendChild(p);st2.appendChild(w)});box.appendChild(st2);
- }).catch(e=>{box.textContent='';box.appendChild(el('div','msg err','Gagal memuat: '+errMsg(e)))});
-}
-function tPb(v){
- const box=el('div');v.appendChild(box);box.appendChild(el('p','mute','Memuat...'));
- call('klasemen').then(k=>{
-  box.textContent='';
-  const taken=[];const st=el('div','stack');
-  k.matches.forEach(x=>{taken.push(x.a,x.b);const r=el('div','vs');const t=el('div','t');t.appendChild(el('b','',x.a+' vs '+x.b));const done=x.winner&&x.result!=='Seri';t.appendChild(el('i','',done?'SELESAI':'BELUM ADA HASIL'));r.appendChild(t);
-   if(done)r.appendChild(el('small','','Pemenang: '+x.winner));st.appendChild(r)});
-  if(k.matches.length){box.appendChild(el('h2','','Pertandingan'));box.appendChild(st)}
-  const p=pairs(k,taken);
-  if(p.pairs.length&&k.groups.some(g=>g.total>0)){
-   box.appendChild(el('h2','','Usulan lawan'));box.appendChild(el('p','mute','Berdasarkan peringkat skor pagi. Belum resmi.'));
-   const s2=el('div','stack');p.pairs.forEach(([a,b])=>{const r=el('div','vs');const t=el('div','t');t.appendChild(el('b','',a+' vs '+b));t.appendChild(el('i','','USULAN'));r.appendChild(t);s2.appendChild(r)});box.appendChild(s2);
-   if(p.left)box.appendChild(el('p','mute',p.left+' belum dapat lawan.'));
-  }else if(!k.matches.length)box.appendChild(el('div','empty','Lawan paintball ditentukan setelah game pagi selesai.'));
- }).catch(e=>{box.textContent='';box.appendChild(el('div','msg err','Gagal memuat: '+errMsg(e)))});
-}
-function kInput(v){
- const c=el('div');v.appendChild(c);c.appendChild(el('h2','','Input skor (panitia)'));
- if(!pin){
-  c.appendChild(el('p','mute','Masukkan PIN panitia untuk mencatat skor.'));
-  const i=el('input');i.type='password';i.placeholder='PIN panitia';i.inputMode='numeric';i.setAttribute('aria-label','PIN panitia');i.style.marginTop='12px';c.appendChild(i);
-  const b=el('button','go','Buka');b.type='button';c.appendChild(b);
-  b.onclick=()=>{b.disabled=true;call('log',{pin:i.value}).then(()=>{pin=i.value;try{sessionStorage.setItem('pn_pin',pin)}catch(e){}render()}).catch(e=>{b.disabled=false;msg(c,errMsg(e),false)})};
-  return;
- }
- const sw=el('div','radios');sw.style.gridTemplateColumns='repeat(3,1fr)';
- [['game','Game'],['pb','Paintball'],['log','Riwayat']].forEach(([k,t])=>{const b=el('button','',t);b.type='button';b.setAttribute('aria-pressed',k===iSeg);b.onclick=()=>{iSeg=k;render()};sw.appendChild(b)});c.appendChild(sw);
- const body=el('div');body.style.marginTop='8px';c.appendChild(body);
- if(iSeg==='game')iGame(body);else if(iSeg==='pb')iPb(body);else iLog(body);
- const out=el('button','del','Kunci input');out.type='button';out.style.marginTop='22px';out.onclick=()=>{pin='';try{sessionStorage.removeItem('pn_pin')}catch(e){}render()};c.appendChild(out);
-}
-let iSeg='game';
-function iGame(b){
- const lab=el('label','l','Nama game');lab.htmlFor='gname';b.appendChild(lab);
- const n=el('input');n.type='text';n.id='gname';n.placeholder='mis. Estafet Balon';n.setAttribute('list','glist');b.appendChild(n);
- const dl=el('datalist');dl.id='glist';b.appendChild(dl);
- const rows=el('div');rows.style.marginTop='10px';b.appendChild(rows);
- const inputs={};let known={};
- D.groups.forEach(g=>{const r=el('div','grow');r.appendChild(el('b','',g));const i=el('input');i.type='number';i.inputMode='decimal';i.placeholder='poin';i.setAttribute('aria-label','Poin '+g);r.appendChild(i);inputs[g]=i;rows.appendChild(r)});
- if(!D.groups.length)rows.appendChild(el('div','empty','Isi tim di tab Kelompok pada sheet dulu.'));
- call('klasemen').then(k=>{k.games.forEach(gm=>{known[gm.name.toLowerCase()]=gm;const o=el('option');o.value=gm.name;dl.appendChild(o)})}).catch(()=>{});
- n.oninput=()=>{const gm=known[n.value.trim().toLowerCase()];Object.keys(inputs).forEach(g=>{const s=gm&&gm.scores.find(x=>x.group===g);inputs[g].value=s?s.points:''})};
- const btn=el('button','go','Simpan poin game');btn.type='button';b.appendChild(btn);
- btn.onclick=()=>{
-  const scores=Object.keys(inputs).map(g=>({group:g,points:inputs[g].value})).filter(s=>s.points!=='');
-  btn.disabled=true;
-  call('skorGame',{pin,game:n.value,scores}).then(r=>{msg(b,'Tersimpan: '+r.saved+' tim untuk game "'+n.value.trim()+'".',true);btn.disabled=false}).catch(e=>{msg(b,errMsg(e),false);btn.disabled=false});
- };
-}
-function iPb(b){
- let R='';
- const mk=(id,t)=>{const l=el('label','l',t);l.htmlFor=id;b.appendChild(l);const s=el('select');s.id=id;const o=el('option','','Pilih tim');o.value='';s.appendChild(o);D.groups.forEach(g=>{const x=el('option','',g);x.value=g;s.appendChild(x)});b.appendChild(s);return s};
- const sug=el('div');b.appendChild(sug);
- const sa=mk('pa','Tim A'),sb=mk('pb2','Tim B');
- b.appendChild(el('label','l','Pemenang'));
- const rad=el('div','radios');rad.style.marginTop='0';b.appendChild(rad);
- function drawR(){rad.textContent='';[['A',(sa.value||'Tim A')+' menang'],['B',(sb.value||'Tim B')+' menang']].forEach(([k,t])=>{const x=el('button','',t);x.type='button';x.setAttribute('aria-pressed',R===k);x.onclick=()=>{R=k;drawR()};rad.appendChild(x)})}
- drawR();sa.onchange=drawR;sb.onchange=drawR;
- call('klasemen').then(k=>{
+  c.textContent='';
   const taken=[];k.matches.forEach(x=>taken.push(x.a,x.b));
-  const p=pairs(k,taken);if(!p.pairs.length)return;
-  sug.appendChild(el('label','l','Usulan lawan (dari peringkat)'));
-  p.pairs.forEach(([a,c2])=>{const r=el('div','logrow');r.appendChild(el('span','',a+' vs '+c2));const u=el('button','use','Pakai');u.type='button';u.onclick=()=>{sa.value=a;sb.value=c2;R='';drawR()};r.appendChild(u);sug.appendChild(r)});
- }).catch(()=>{});
- const btn=el('button','go','Simpan pertandingan');btn.type='button';b.appendChild(btn);
- btn.onclick=()=>{btn.disabled=true;call('paintball',{pin,a:sa.value,b:sb.value,result:R}).then(()=>{msg(b,'Pertandingan tersimpan.',true);sa.value='';sb.value='';R='';drawR();btn.disabled=false}).catch(e=>{msg(b,errMsg(e),false);btn.disabled=false})};
+  const free=D.groups.filter(g=>!taken.includes(g));
+  if(!D.groups.length){c.appendChild(el('div','empty','Isi tim di tab Kelompok pada sheet dulu.'));return}
+  if(free.length<2){c.appendChild(el('div','empty',free.length?free[0]+' tidak punya lawan (jumlah tim ganjil).':'Semua tim sudah punya lawan. Lihat tab Pertandingan.'));return}
+  if(!free.includes(uA))uA='';
+  const lab=el('label','l','Tim pertama');lab.htmlFor='ua';c.appendChild(lab);
+  const sel=el('select');sel.id='ua';const o0=el('option','','Pilih tim');o0.value='';sel.appendChild(o0);free.forEach(g=>{const o=el('option','',g);o.value=g;sel.appendChild(o)});sel.value=uA;c.appendChild(sel);
+  const wrap=el('div','wheelw');const cv=el('canvas','wheel');cv.width=600;cv.height=600;cv.setAttribute('aria-label','Roda undian lawan');wrap.appendChild(cv);wrap.appendChild(el('div','ptr'));c.appendChild(wrap);
+  const btn=el('button','go','Putar roda');btn.type='button';c.appendChild(btn);
+  const res=el('div');c.appendChild(res);
+  const opp=()=>free.filter(g=>g!==uA);
+  function sync(){drawWheel(cv,uA?opp():[]);btn.disabled=!uA||spinning}
+  sel.onchange=()=>{uA=sel.value;rot=0;cv.style.transition='none';cv.style.transform='none';res.textContent='';sync()};
+  sync();
+  btn.onclick=()=>{
+   if(spinning||!uA)return;spinning=true;btn.disabled=true;sel.disabled=true;res.textContent='';
+   const os=opp(),n=os.length,w=rnd(n),s=360/n,jit=(Math.random()-.5)*s*.6;
+   const target=((360-(w+.5)*s-jit)%360+360)%360,cur=((rot%360)+360)%360;
+   rot=rot+360*6+((target-cur)+360)%360;
+   const dur=matchMedia('(prefers-reduced-motion:reduce)').matches?300:5000;
+   cv.style.transition='transform '+dur+'ms cubic-bezier(.1,.55,.1,1)';cv.style.transform='rotate('+rot+'deg)';
+   const a=uA,b=os[w];
+   setTimeout(()=>{
+    call('pasangan',{pin,a,b}).then(()=>{
+     res.textContent='';const card=el('div','hl c-green');card.appendChild(icon('target','green'));const t=el('div');t.appendChild(el('div','k','PASANGAN BARU'));t.appendChild(el('div','v',a+' vs '+b));card.appendChild(t);res.appendChild(card);
+     const nx=el('button','go','Undi tim berikutnya');nx.type='button';nx.onclick=()=>{uA='';render()};res.appendChild(nx);
+    }).catch(e=>{msg(res,errMsg(e),false);const rf=el('button','ref','Muat ulang');rf.type='button';rf.onclick=()=>{uA='';render()};res.appendChild(rf)});
+   },dur+250);
+  };
+ }).catch(e=>{c.textContent='';msg(c,'Gagal memuat: '+errMsg(e),false)});
 }
-function iLog(b){
- b.appendChild(el('p','mute','Memuat riwayat...'));
- call('log',{pin}).then(l=>{
-  b.textContent='';
-  const del=(kind,id,row)=>{const x=el('button','del','Hapus');x.type='button';x.onclick=()=>{x.disabled=true;call('hapus',{pin,kind,id}).then(()=>row.remove()).catch(e=>{x.disabled=false;msg(b,errMsg(e),false)})};return x};
-  b.appendChild(el('h2','','Pertandingan paintball'));
-  if(!l.matches.length)b.appendChild(el('p','mute','Belum ada.'));
-  l.matches.forEach(m=>{const r=el('div','logrow');r.appendChild(el('span','',m.a+' vs '+m.b+' · '+(m.result==='Seri'?'Seri':m.winner+' menang')));r.appendChild(del('pb',m.id,r));b.appendChild(r)});
-  b.appendChild(el('h2','','Poin game (40 terbaru)'));
-  if(!l.games.length)b.appendChild(el('p','mute','Belum ada.'));
-  l.games.forEach(m=>{const r=el('div','logrow');r.appendChild(el('span','',m.game+' · '+m.group+' · '+m.points));r.appendChild(del('game',m.id,r));b.appendChild(r)});
- }).catch(e=>{b.textContent='';msg(b,errMsg(e),false)});
+function tLawan(v){
+ const box=el('div');v.appendChild(box);const extra=el('div');v.appendChild(extra);
+ let busy=false,confirmId='';
+ function setBusy(x){busy=x}
+ function load(){call('klasemen').then(draw).catch(e=>{box.textContent='';box.appendChild(el('div','msg err','Gagal memuat: '+errMsg(e)))})}
+ function act(p,x){if(x)x.disabled=true;setBusy(true);return call(p.a,p.b).then(()=>{confirmId='';setBusy(false);load()}).catch(e=>{setBusy(false);if(x)x.disabled=false;msg(box,errMsg(e),false)})}
+ function draw(k){
+  box.textContent='';
+  if(!k.matches.length){box.appendChild(el('div','empty','Belum ada pasangan. Lawan ditentukan lewat undian roda oleh panitia.'));return}
+  const done=k.matches.filter(m=>m.winner).length;
+  box.appendChild(el('p','mute',k.matches.length+' pertandingan · '+done+' sudah ada pemenang'));
+  k.matches.forEach((m,i)=>{
+   const w=el('section','tm');const h=el('div','tmh');h.style.background='var(--blue-bg)';h.appendChild(el('b','','Pertandingan '+(i+1)));h.appendChild(el('small','',m.winner?'Selesai':'Belum ada hasil'));w.appendChild(h);h.querySelector('small').style.color='var(--blue-d)';
+   const b=el('div','tmb');b.style.padding='12px';
+   const vs=el('div','vsb');
+   [['A',m.a],['B',m.b]].forEach(([key,nm],j)=>{
+    if(j===1)vs.appendChild(el('span','vsm','VS'));
+    const sd=el('div','side'+(m.winner===nm?' win':(m.winner?' lose':'')));sd.appendChild(el('b','',nm));if(m.winner===nm)sd.appendChild(el('small','','MENANG'));vs.appendChild(sd);
+   });b.appendChild(vs);
+   if(pin){
+    const rd=el('div','radios');rd.style.marginTop='12px';
+    [['A',m.a],['B',m.b]].forEach(([key,nm])=>{const x=el('button','',shortN(nm)+' menang');x.type='button';x.setAttribute('aria-pressed',m.winner===nm);x.onclick=()=>act({a:'menang',b:{pin,id:m.id,result:m.winner===nm?'':key}},x);rd.appendChild(x)});b.appendChild(rd);
+    const dl=el('button','del',confirmId===m.id?'Yakin hapus pasangan?':'Hapus pasangan');dl.type='button';dl.style.marginTop='12px';
+    dl.onclick=()=>{if(confirmId!==m.id){confirmId=m.id;dl.textContent='Yakin hapus pasangan?';return}act({a:'hapus',b:{pin,kind:'pb',id:m.id}},dl)};b.appendChild(dl);
+   }
+   w.appendChild(b);box.appendChild(w);
+  });
+ }
+ if(!pin){const bt=el('button','ref','Panitia: buka dengan PIN');bt.type='button';bt.onclick=()=>{bt.remove();pinGate(extra,render,'Masukkan PIN panitia untuk menandai pemenang.')};extra.appendChild(bt)}
+ else{const out=el('button','del','Kunci panitia');out.type='button';out.style.marginTop='22px';out.onclick=()=>{pin='';try{sessionStorage.removeItem('pn_pin')}catch(e){}render()};extra.appendChild(out)}
+ box.appendChild(el('p','mute','Memuat...'));load();
+ timer=setInterval(()=>{if(!busy)load()},8000);
 }
 
 /* GROW IDOL */
