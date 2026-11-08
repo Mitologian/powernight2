@@ -71,9 +71,9 @@ input[type=search],select,input[type=text],input[type=password],input[type=numbe
 .sch{position:relative;margin-top:14px}
 .sch svg{position:absolute;left:14px;top:50%;margin-top:-10px;width:20px;height:20px;fill:none;stroke:var(--mute);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
 .sch input{padding-left:44px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
-.stat{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:12px 6px;text-align:center}
-.stat b{display:block;font-size:22px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}.stat span{font-size:11.5px;color:var(--mute)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.stat{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:12px 2px;text-align:center}
+.stat b{display:block;font-size:21px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}.stat span{font-size:11.5px;color:var(--mute)}
 label.l{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-weight:600;margin:20px 0 8px}
 .score{margin-top:16px;border-radius:18px;padding:16px 16px 14px;text-align:center;background:var(--card);box-shadow:var(--shadow)}
 .score .k{font-size:11px;font-weight:600;letter-spacing:.1em;color:var(--mute)}.score .s{font-size:12.5px;color:var(--mute);margin-top:6px}
@@ -504,7 +504,7 @@ function rKamar(v){
  }
  function draw(){
   list.textContent='';const nd=kq.trim().toLowerCase();
-  {const ppl=K.reduce((a,r)=>a+r.names.length+(r.family||0),0),ty=new Set(K.map(r=>r.type)).size,st=el('div','stats');[[K.length,'Kamar'],[ppl,'Peserta'],[ty,'Tipe']].forEach(([n,l])=>{const d=el('div','stat');d.appendChild(el('b','',String(n)));d.appendChild(el('span','',l));st.appendChild(d)});list.appendChild(st)}
+  {const occ=K.filter(r=>r.names.length||r.family),mem=K.reduce((a,r)=>a+r.names.length,0),ppl=K.reduce((a,r)=>a+r.names.length+(r.family||0),0),ty=new Set(occ.map(r=>r.type)).size,st=el('div','stats');[[mem,'Member'],[ppl,'Peserta'],[occ.length,'Kamar'],[ty,'Tipe']].forEach(([n,l])=>{const d=el('div','stat');d.appendChild(el('b','',String(n)));d.appendChild(el('span','',l));st.appendChild(d)});list.appendChild(st)}
   const rooms=K.filter(r=>!nd||(r.no+' '+r.names.join(' ')).toLowerCase().includes(nd));
   if(kmSeg==='denah'){
    if(nd&&rooms.length)list.appendChild(found(nd,rooms));
