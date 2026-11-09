@@ -233,38 +233,25 @@ function nowEvent(items){
  return found;
 }
 function who(r){const w=String(r.who||'').toLowerCase();return w.includes('keluarga')?'K':w.includes('member')?'M':'S'}
+let aud=store('pn_aud')==='K'?'K':'M';
 function rRundown(v){
  if(!D.rundown.length){v.appendChild(el('div','empty','Rundown belum diisi panitia.'));return}
  const days=[];D.rundown.forEach(r=>{if(!days.includes(r.day))days.push(r.day)});
  if(!days.includes(rDay)){const n=nowEvent(D.rundown);rDay=n?n.day:days[0]}
  v.appendChild(tabsBar(days.map(d=>[d,d||'Rundown']),rDay,d=>{rDay=d;render()}));
- const nowM=nowEvent(D.rundown.filter(r=>who(r)!=='K')),nowK=nowEvent(D.rundown.filter(r=>who(r)!=='M'));
- const liveOf=r=>{const w=who(r);return w==='M'?nowM===r:w==='K'?nowK===r:(nowM===r&&nowK===r)};
- const rows=D.rundown.map((r,i)=>({r,i,m:minutes(r.time)})).filter(x=>x.r.day===rDay).sort((a,b)=>(a.m===null||b.m===null)?a.i-b.i:(a.m-b.m||a.i-b.i)).map(x=>x.r);
+ const split=D.rundown.some(r=>who(r)!=='S');
+ if(split){const t2=tabsBar([['M','Member'],['K','Keluarga']],aud,k=>{aud=k;store('pn_aud',k);render()});t2.style.marginTop='10px';v.appendChild(t2)}
+ const track=D.rundown.filter(r=>!split||who(r)==='S'||who(r)===aud);
+ const now=nowEvent(track);
+ const rows=track.map((r,i)=>({r,i,m:minutes(r.time)})).filter(x=>x.r.day===rDay).sort((a,b)=>(a.m===null||b.m===null)?a.i-b.i:(a.m-b.m||a.i-b.i)).map(x=>x.r);
  const t=el('div','rt');v.appendChild(t);
  const hd=el('div','rth');hd.appendChild(el('span','','JAM'));hd.appendChild(el('span'));hd.appendChild(el('span','','ACARA'));t.appendChild(hd);
- let blk=null;
- const flush=()=>{
-  if(!blk)return;
-  const sp=el('div','rsp'),sh=el('div','rsh');sh.appendChild(el('span','m','MEMBER'));sh.appendChild(el('span','k','KELUARGA MEMBER'));sp.appendChild(sh);
-  const cols=el('div','rsc');
-  [blk.M,blk.K].forEach(list=>{
-   const c=el('div');
-   list.forEach(r=>{const live=liveOf(r),it=el('div','si'+(live?' live':''));const tt=el('div','tt');tt.appendChild(el('span','',r.time));if(live)tt.appendChild(el('span','livep','LIVE'));it.appendChild(tt);it.appendChild(el('b','',r.title));const sm=[r.note,r.place].filter(Boolean).join(' · ');if(sm)it.appendChild(el('small','',sm));c.appendChild(it)});
-   cols.appendChild(c);
-  });
-  sp.appendChild(cols);t.appendChild(sp);blk=null;
- };
  rows.forEach(r=>{
-  const w=who(r);
-  if(w!=='S'){blk=blk||{M:[],K:[]};blk[w].push(r);return}
-  flush();
-  const live=liveOf(r),c=evIcon(r.title)[1],row=el('div','rtr'+(live?' live':''));
+  const live=now===r,c=evIcon(r.title)[1],row=el('div','rtr'+(live?' live':''));
   row.appendChild(el('div','tt',r.time));row.appendChild(el('div','bar bc-'+c));
   const b=el('div');b.appendChild(el('b','',r.title));const sm=[r.note,r.place].filter(Boolean).join(' · ');if(sm)b.appendChild(el('small','',sm));row.appendChild(b);
   row.appendChild(live?el('span','livep','LIVE'):el('span'));t.appendChild(row);
  });
- flush();
 }
 
 /* TEAM */
