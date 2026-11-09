@@ -35,7 +35,10 @@ nav button{border:0;background:none;padding:0;border-radius:18px;font:inherit;fo
 nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 nav button[aria-selected="true"]{color:var(--red-t);background:var(--red-soft);font-weight:600}
 button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--red);outline-offset:2px}
-.intro{margin:18px 0 0;font-size:16px;font-weight:500;line-height:1.5;text-align:center}
+.intro{display:flex;gap:14px;align-items:center;margin:22px 0 4px;background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:14px}
+.intro .tr{width:44px;height:44px;border-radius:14px;background:var(--orange);color:#fff;display:grid;place-items:center;flex:none}
+.intro .tr svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.intro p{margin:0;font-size:15.5px;line-height:1.4}.intro p b{display:block;font-weight:700;margin-top:2px;color:var(--orange-d)}
 .mute{color:var(--mute);font-size:13.5px;margin:12px 0 0}
 h2{font-size:18px;margin:26px 0 0;font-weight:600}
 .stack{display:grid;gap:10px;margin-top:14px}
@@ -177,7 +180,7 @@ const API=window.PN_API||'';
 const C=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const isDark=()=>false;
 const LOCK='<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>',UNLOCK='<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 017.5-1.5"/>';
-const IC={audM:'<path d="M19 21v-1.5a5 5 0 0 0-5-5h-4a5 5 0 0 0-5 5V21"/><circle cx="12" cy="7.5" r="3.5"/>',audK:'<path d="M12 20.5l-7.4-7.2a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9a4.6 4.6 0 0 1 6.5 6.5z"/>',audS:'<path d="M16 20.5v-1.7a4 4 0 0 0-4-4H6.5a4 4 0 0 0-4 4v1.7"/><circle cx="9.2" cy="7.5" r="3.5"/><path d="M21.5 20.5v-1.7a4 4 0 0 0-3-3.9"/><path d="M15.5 4.2a3.5 3.5 0 0 1 0 6.6"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',home:'<path d="M3 20V9l9-6 9 6v11zM9 20v-6h6v6"/>',users:'<path d="M9 11a3 3 0 100-6 3 3 0 000 6zM3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 5.2a3 3 0 010 5.6M18 14.3c1.8.8 3 2.6 3 4.7"/>',flame:'<path d="M12 3c1 3 4 4 4 8a4 4 0 01-8 0c0-2 1-3 2-4 0 2 1 2 1 1 0-2 0-3 1-5zM8 21h8"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',mic:'<path d="M12 3a3 3 0 013 3v5a3 3 0 01-6 0V6a3 3 0 013-3zM5 11a7 7 0 0014 0M12 18v3"/>',trophy:'<path d="M7 4h10v5a5 5 0 01-10 0zM7 6H4v1a3 3 0 003 3M17 6h3v1a3 3 0 01-3 3M12 14v4M8 20h8"/>',target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',food:'<path d="M6 3v8a2 2 0 002 2v8M10 3v6M6 7h4M17 3c-2 2-3 5-3 8h3v10"/>',bed:'<path d="M3 18V7M3 14h18v4M21 14v-2a3 3 0 00-3-3h-7v5"/>'};
+const IC={trophy:'<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>',audM:'<path d="M19 21v-1.5a5 5 0 0 0-5-5h-4a5 5 0 0 0-5 5V21"/><circle cx="12" cy="7.5" r="3.5"/>',audK:'<path d="M12 20.5l-7.4-7.2a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9a4.6 4.6 0 0 1 6.5 6.5z"/>',audS:'<path d="M16 20.5v-1.7a4 4 0 0 0-4-4H6.5a4 4 0 0 0-4 4v1.7"/><circle cx="9.2" cy="7.5" r="3.5"/><path d="M21.5 20.5v-1.7a4 4 0 0 0-3-3.9"/><path d="M15.5 4.2a3.5 3.5 0 0 1 0 6.6"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',home:'<path d="M3 20V9l9-6 9 6v11zM9 20v-6h6v6"/>',users:'<path d="M9 11a3 3 0 100-6 3 3 0 000 6zM3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 5.2a3 3 0 010 5.6M18 14.3c1.8.8 3 2.6 3 4.7"/>',flame:'<path d="M12 3c1 3 4 4 4 8a4 4 0 01-8 0c0-2 1-3 2-4 0 2 1 2 1 1 0-2 0-3 1-5zM8 21h8"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',mic:'<path d="M12 3a3 3 0 013 3v5a3 3 0 01-6 0V6a3 3 0 013-3zM5 11a7 7 0 0014 0M12 18v3"/>',trophy:'<path d="M7 4h10v5a5 5 0 01-10 0zM7 6H4v1a3 3 0 003 3M17 6h3v1a3 3 0 01-3 3M12 14v4M8 20h8"/>',target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',food:'<path d="M6 3v8a2 2 0 002 2v8M10 3v6M6 7h4M17 3c-2 2-3 5-3 8h3v10"/>',bed:'<path d="M3 18V7M3 14h18v4M21 14v-2a3 3 0 00-3-3h-7v5"/>'};
 function svg(name){const s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.setAttribute('viewBox','0 0 24 24');s.setAttribute('aria-hidden','true');s.innerHTML=IC[name]||IC.clock;return s}
 function icon(name,color,sq){const d=el('div','ic c-'+color+(sq?' sq':''));d.appendChild(svg(name));return d}
 let adm=false,D=null,K=null,tab='rundown',rDay='',kSeg='tim',gSeg='nilai',score=0,chosen='',q='',kq='',timer=null;
@@ -416,7 +419,7 @@ function rIdol(v){
  if(gSeg==='nilai')gNilai(body);else gRank(body);
 }
 function gNilai(c){
- c.appendChild(el('p','intro','Siapakah performer terbaik di Power Night 2 malam ini? Beri nilai untuk Grow Idol Anda!'));
+ {const ib=el('div','intro'),tr=el('div','tr');tr.appendChild(svg('trophy'));ib.appendChild(tr);const p=el('p');p.appendChild(document.createTextNode('Siapakah performer terbaik di Power\u00a0Night\u00a02 malam ini?'));p.appendChild(el('b','','Beri nilai untuk Grow Idol Anda!'));ib.appendChild(p);c.appendChild(ib)}
  if(!D.open){c.appendChild(el('div','msg err','Penilaian sedang ditutup panitia.'));return}
  const done=voted();
  const lab=el('label','l','Penilaian untuk siapa');lab.htmlFor='sg';c.appendChild(lab);
