@@ -64,6 +64,15 @@ h2{font-size:18px;margin:26px 0 0;font-weight:600}
 .livep{background:var(--red);color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.08em;border-radius:999px;padding:3px 9px}
 .bc-amber{background:var(--amber)}.bc-teal{background:var(--teal)}.bc-green{background:var(--green)}.bc-orange{background:var(--orange)}.bc-blue{background:var(--blue)}.bc-purple{background:var(--purple)}.bc-gray{background:var(--field)}
 .ic.c-amber{background:var(--amber-bg);color:var(--amber-d)}.ic.c-teal{background:var(--teal-bg);color:var(--teal-d)}.ic.c-green{background:var(--green-bg);color:var(--green-d)}.ic.c-purple{background:var(--purple-bg);color:var(--purple-d)}.ic.c-blue{background:var(--blue-bg);color:var(--blue-d)}.ic.c-orange{background:var(--orange-bg);color:var(--orange-d)}.ic.c-gray{background:var(--soft);color:var(--mute)}
+.rsp{border-top:1px solid var(--line)}
+.rsh{display:grid;grid-template-columns:1fr 1fr}.rsh span{font-size:11px;font-weight:600;letter-spacing:.1em;text-align:center;padding:7px 4px}
+.rsh .m{background:var(--blue-bg);color:var(--blue-d)}.rsh .k{background:var(--pink-bg);color:var(--pink-d)}
+.rsc{display:grid;grid-template-columns:1fr 1fr}.rsc>div+div{border-left:1px solid var(--line)}
+.si{padding:11px 12px}.si+.si{border-top:1px solid var(--line)}.si.live{background:var(--red-soft)}
+.si .tt{font-weight:700;font-size:14px;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:6px}.si.live .tt{color:var(--red-t)}
+.si b{display:block;font-weight:600;font-size:14px;line-height:1.25;margin-top:2px}.si small{display:block;font-size:12px;color:var(--mute);margin-top:2px;line-height:1.3}
+.si .livep{font-size:9.5px;padding:2px 7px}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .tm{margin-top:16px;background:var(--card);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
 .tmh{padding:12px 14px;background:var(--blue-bg);color:var(--blue-d)}
 .tmh b{display:block;font-size:16px;font-weight:600;color:var(--fg)}.tmh small{font-size:12.5px}
@@ -166,8 +175,8 @@ let adm=false,D=null,K=null,tab='rundown',rDay='',kSeg='tim',gSeg='nilai',score=
 function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
 let dev=store('pn_dev');
 if(!dev){dev=(crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random().toString(16).slice(2));store('pn_dev',dev)}
-function voted(){try{return JSON.parse(store('pn_voted')||'[]')}catch(e){return[]}}
-function addVoted(n){const v=voted();if(!v.includes(n)){v.push(n);store('pn_voted',JSON.stringify(v))}}
+function voted(){try{return JSON.parse(store('pn_voted2')||'[]')}catch(e){return[]}}
+function addVoted(n){const v=voted();if(!v.includes(n)){v.push(n);store('pn_voted2',JSON.stringify(v))}}
 async function call(action,body){
  if(!API)throw new Error('Alamat API belum diisi di config.js');
  let r;
@@ -223,21 +232,39 @@ function nowEvent(items){
  today.forEach(r=>{const m=minutes(r.time);if(m!==null&&m<=cur)found=r});
  return found;
 }
+function who(r){const w=String(r.who||'').toLowerCase();return w.includes('keluarga')?'K':w.includes('member')?'M':'S'}
 function rRundown(v){
  if(!D.rundown.length){v.appendChild(el('div','empty','Rundown belum diisi panitia.'));return}
  const days=[];D.rundown.forEach(r=>{if(!days.includes(r.day))days.push(r.day)});
  if(!days.includes(rDay)){const n=nowEvent(D.rundown);rDay=n?n.day:days[0]}
  v.appendChild(tabsBar(days.map(d=>[d,d||'Rundown']),rDay,d=>{rDay=d;render()}));
- const now=nowEvent(D.rundown);
+ const nowM=nowEvent(D.rundown.filter(r=>who(r)!=='K')),nowK=nowEvent(D.rundown.filter(r=>who(r)!=='M'));
+ const liveOf=r=>{const w=who(r);return w==='M'?nowM===r:w==='K'?nowK===r:(nowM===r&&nowK===r)};
+ const rows=D.rundown.map((r,i)=>({r,i,m:minutes(r.time)})).filter(x=>x.r.day===rDay).sort((a,b)=>(a.m===null||b.m===null)?a.i-b.i:(a.m-b.m||a.i-b.i)).map(x=>x.r);
  const t=el('div','rt');v.appendChild(t);
  const hd=el('div','rth');hd.appendChild(el('span','','JAM'));hd.appendChild(el('span'));hd.appendChild(el('span','','ACARA'));t.appendChild(hd);
- D.rundown.filter(r=>r.day===rDay).forEach(r=>{
-  const live=now===r,c=evIcon(r.title)[1];const row=el('div','rtr'+(live?' live':''));
+ let blk=null;
+ const flush=()=>{
+  if(!blk)return;
+  const sp=el('div','rsp'),sh=el('div','rsh');sh.appendChild(el('span','m','MEMBER'));sh.appendChild(el('span','k','KELUARGA MEMBER'));sp.appendChild(sh);
+  const cols=el('div','rsc');
+  [blk.M,blk.K].forEach(list=>{
+   const c=el('div');
+   list.forEach(r=>{const live=liveOf(r),it=el('div','si'+(live?' live':''));const tt=el('div','tt');tt.appendChild(el('span','',r.time));if(live)tt.appendChild(el('span','livep','LIVE'));it.appendChild(tt);it.appendChild(el('b','',r.title));const sm=[r.note,r.place].filter(Boolean).join(' · ');if(sm)it.appendChild(el('small','',sm));c.appendChild(it)});
+   cols.appendChild(c);
+  });
+  sp.appendChild(cols);t.appendChild(sp);blk=null;
+ };
+ rows.forEach(r=>{
+  const w=who(r);
+  if(w!=='S'){blk=blk||{M:[],K:[]};blk[w].push(r);return}
+  flush();
+  const live=liveOf(r),c=evIcon(r.title)[1],row=el('div','rtr'+(live?' live':''));
   row.appendChild(el('div','tt',r.time));row.appendChild(el('div','bar bc-'+c));
-  const b=el('div');b.appendChild(el('b','',r.title));const s=[r.note,r.place].filter(Boolean).join(' · ');if(s)b.appendChild(el('small','',s));row.appendChild(b);
-  if(live)row.appendChild(el('span','livep','LIVE'));else row.appendChild(el('span'));
-  t.appendChild(row);
+  const b=el('div');b.appendChild(el('b','',r.title));const sm=[r.note,r.place].filter(Boolean).join(' · ');if(sm)b.appendChild(el('small','',sm));row.appendChild(b);
+  row.appendChild(live?el('span','livep','LIVE'):el('span'));t.appendChild(row);
  });
+ flush();
 }
 
 /* TEAM */
@@ -280,6 +307,18 @@ function pinModal(title,run){
  i.onkeydown=e=>{if(e.key==='Enter')ok.click();if(e.key==='Escape')ov.remove()};
  ok.onclick=()=>{ok.disabled=true;Promise.resolve().then(()=>run(i.value)).then(()=>ov.remove()).catch(e=>{ok.disabled=false;msg(bx,errMsg(e),false);i.select()})};
  document.body.appendChild(ov);i.focus();
+}
+function editModal(m,done){
+ const ov=el('div','ov'),bx=el('div','mod');ov.appendChild(bx);
+ const h=el('h2','','Ubah tim pertandingan');h.style.marginTop='0';bx.appendChild(h);
+ bx.appendChild(el('p','mute','Mengubah tim akan menghapus hasil pemenang pertandingan ini. Khusus panitia.'));
+ const mk=(lab,val)=>{const l=el('label','l',lab);l.style.margin='14px 0 6px';bx.appendChild(l);const sl=el('select');(D.groups||[]).forEach(g=>{const o=el('option','',g);o.value=g;sl.appendChild(o)});sl.value=val;bx.appendChild(sl);return sl};
+ const sa=mk('Tim A',m.a),sb=mk('Tim B',m.b);
+ const i=el('input');i.type='password';i.inputMode='numeric';i.placeholder='PIN panitia';i.setAttribute('aria-label','PIN panitia');i.autocomplete='off';i.style.marginTop='14px';bx.appendChild(i);
+ const row=el('div','mrow');const cn=el('button','ref','Batal');cn.type='button';const ok=el('button','go','Simpan');ok.type='button';row.appendChild(cn);row.appendChild(ok);bx.appendChild(row);
+ cn.onclick=()=>ov.remove();ov.onclick=e=>{if(e.target===ov)ov.remove()};
+ ok.onclick=()=>{ok.disabled=true;call('ubah',{pin:i.value,id:m.id,a:sa.value,b:sb.value}).then(()=>{ov.remove();return done()}).catch(e=>{ok.disabled=false;msg(bx,errMsg(e),false)})};
+ document.body.appendChild(ov);
 }
 const WCOL=['#C8102E','#f6c453','#35a99a','#4b8bd6','#7c4dc4','#e8833a','#d9568f','#2e9b5f'];
 let uA='',spinning=false,rot=0;
@@ -352,7 +391,10 @@ function tLawan(v){
    if(adm){
    const rd=el('div','radios');rd.style.marginTop='12px';
    [['A',m.a],['B',m.b]].forEach(([key,nm])=>{const x=el('button','',shortN(nm)+' menang');x.type='button';x.setAttribute('aria-pressed',m.winner===nm);x.onclick=()=>pinModal('Tandai pemenang',p=>call('menang',{pin:p,id:m.id,result:m.winner===nm?'':key}).then(()=>{if(m.winner!==nm)confetti();return load()}));rd.appendChild(x)});b.appendChild(rd);
-   const dl=el('button','del','Hapus pasangan');dl.type='button';dl.style.marginTop='12px';dl.onclick=()=>pinModal('Hapus pasangan '+shortN(m.a)+' vs '+shortN(m.b),p=>call('hapus',{pin:p,kind:'pb',id:m.id}).then(load));b.appendChild(dl);
+   const ac=el('div','acts');
+   const ed=el('button','del','Ubah tim');ed.type='button';ed.style.color='var(--fg)';ed.onclick=()=>editModal(m,load);ac.appendChild(ed);
+   if(m.winner){const rs=el('button','del','Hapus hasil');rs.type='button';rs.style.color='var(--fg)';rs.onclick=()=>pinModal('Hapus hasil pertandingan',p=>call('menang',{pin:p,id:m.id,result:''}).then(load));ac.appendChild(rs)}
+   const dl=el('button','del','Hapus pasangan');dl.type='button';dl.onclick=()=>pinModal('Hapus pasangan '+shortN(m.a)+' vs '+shortN(m.b),p=>call('hapus',{pin:p,kind:'pb',id:m.id}).then(load));ac.appendChild(dl);b.appendChild(ac);
    }
    w.appendChild(b);box.appendChild(w);
   });
