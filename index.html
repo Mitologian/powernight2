@@ -24,6 +24,7 @@ body{margin:0;-webkit-tap-highlight-color:transparent;background:var(--bg);color
 .adm{position:absolute;right:12px;bottom:12px;width:40px;height:40px;border-radius:50%;border:0;background:rgba(0,0,0,.38);color:#fff;display:grid;place-items:center;cursor:pointer;padding:0;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 .adm svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .adm[aria-pressed="true"]{background:var(--red)}
+.adm.loc{right:60px}
 main{max-width:560px;margin:0 auto;padding:0 16px 24px}
 #view>*{animation:pop .2s ease both}@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}@media (prefers-reduced-motion:reduce){#view>*{animation:none}}
 .tabs{display:flex;gap:2px;background:var(--seg);border-radius:15px;padding:4px;margin:18px 0 0;overflow-x:auto}
@@ -35,6 +36,13 @@ nav button{border:0;background:none;padding:0;border-radius:18px;font:inherit;fo
 nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 nav button[aria-selected="true"]{color:var(--red-t);background:var(--red-soft);font-weight:600}
 button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.mapw{margin-top:14px;border-radius:18px;overflow:hidden;box-shadow:var(--shadow);background:var(--soft)}
+.mapw iframe{display:block;width:100%;height:280px;border:0}
+.addr{display:flex;gap:12px;align-items:flex-start;margin-top:14px;background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:14px}
+.addr b{display:block;font-weight:600;font-size:16px}.addr small{display:block;font-size:13px;color:var(--mute);margin-top:2px;line-height:1.4}
+.fac{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+.fc{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:12px}
+.fc .ib{margin-bottom:8px}.fc b{display:block;font-weight:600;font-size:14.5px;line-height:1.25}.fc small{display:block;font-size:12px;color:var(--mute);margin-top:2px;line-height:1.3}
 .lockw{position:relative;margin-top:4px}
 .lk{filter:blur(6px);opacity:.75;user-select:none;pointer-events:none}
 .lov{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;padding:70px 20px 0;background:linear-gradient(rgba(245,245,247,.15),rgba(245,245,247,.7))}
@@ -171,7 +179,7 @@ label.l{display:block;font-size:12px;letter-spacing:.08em;text-transform:upperca
 .zchips{display:flex;gap:8px;margin-top:6px}.zchips button{border:1px solid var(--field);background:var(--card);border-radius:999px;padding:8px 16px;font:inherit;font-size:14px;font-weight:500;cursor:pointer;color:var(--fg)}
 </style></head>
 <body>
-<header class="banner"><img src="hero.jpg" alt="Power Night 2, BNI Grow, Driam Riverside Ciwidey" width="1000" height="460" fetchpriority="high"><h1>Power Night 2</h1><div class="sub" id="sub">Rundown</div><button class="adm" id="adm" type="button" aria-label="Mode panitia" aria-pressed="false"></button></header>
+<header class="banner"><img src="hero.jpg" alt="Power Night 2, BNI Grow, Driam Riverside Ciwidey" width="1000" height="460" fetchpriority="high"><h1>Power Night 2</h1><div class="sub" id="sub">Rundown</div><button class="adm loc" id="loc" type="button" aria-label="Lokasi acara"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.800 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></button><button class="adm" id="adm" type="button" aria-label="Mode panitia" aria-pressed="false"></button></header>
 <main id="view"><div class="empty">Memuat...</div></main>
 <nav role="tablist">
 <button role="tab" data-t="rundown" aria-selected="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4"/></svg><span>Rundown</span></button>
@@ -187,7 +195,7 @@ const API=window.PN_API||'';
 const C=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const isDark=()=>false;
 const LOCK='<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>',UNLOCK='<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 017.5-1.5"/>';
-const IC={lock:LOCK,trophy:'<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>',audM:'<path d="M19 21v-1.5a5 5 0 0 0-5-5h-4a5 5 0 0 0-5 5V21"/><circle cx="12" cy="7.5" r="3.5"/>',audK:'<path d="M12 20.5l-7.4-7.2a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9a4.6 4.6 0 0 1 6.5 6.5z"/>',audS:'<path d="M16 20.5v-1.7a4 4 0 0 0-4-4H6.5a4 4 0 0 0-4 4v1.7"/><circle cx="9.2" cy="7.5" r="3.5"/><path d="M21.5 20.5v-1.7a4 4 0 0 0-3-3.9"/><path d="M15.5 4.2a3.5 3.5 0 0 1 0 6.6"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',home:'<path d="M3 20V9l9-6 9 6v11zM9 20v-6h6v6"/>',users:'<path d="M9 11a3 3 0 100-6 3 3 0 000 6zM3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 5.2a3 3 0 010 5.6M18 14.3c1.8.8 3 2.6 3 4.7"/>',flame:'<path d="M12 3c1 3 4 4 4 8a4 4 0 01-8 0c0-2 1-3 2-4 0 2 1 2 1 1 0-2 0-3 1-5zM8 21h8"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',mic:'<path d="M12 3a3 3 0 013 3v5a3 3 0 01-6 0V6a3 3 0 013-3zM5 11a7 7 0 0014 0M12 18v3"/>',trophy:'<path d="M7 4h10v5a5 5 0 01-10 0zM7 6H4v1a3 3 0 003 3M17 6h3v1a3 3 0 01-3 3M12 14v4M8 20h8"/>',target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',food:'<path d="M6 3v8a2 2 0 002 2v8M10 3v6M6 7h4M17 3c-2 2-3 5-3 8h3v10"/>',bed:'<path d="M3 18V7M3 14h18v4M21 14v-2a3 3 0 00-3-3h-7v5"/>'};
+const IC={pin:'<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.800 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',fork:'<path d="M5 3v7a2 2 0 0 0 4 0V3M7 3v18M17 3c-2 2-3 5-3 8h3v10"/>',wave:'<path d="M3 8c2-2 4-2 6 0s4 2 6 0 4-2 6 0M3 14c2-2 4-2 6 0s4 2 6 0 4-2 6 0M3 20c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/>',tent:'<path d="M3 20L12 4l9 16zM12 4v16M9 20l3-6 3 6"/>',camera:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',park:'<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9.5 16V8h3.2a2.5 2.5 0 0 1 0 5H9.5"/>',cup:'<path d="M5 8h11v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4zM16 9h2a2 2 0 0 1 0 4h-2M8 3v2M12 3v2"/>',door:'<path d="M6 21V4h12v17M4 21h16M14 12v.01"/>',smile:'<circle cx="12" cy="12" r="9"/><path d="M8 14c1 1.5 2.3 2 4 2s3-.5 4-2M9 9.500v.01M15 9.500v.01"/>',lock:LOCK,trophy:'<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>',audM:'<path d="M19 21v-1.5a5 5 0 0 0-5-5h-4a5 5 0 0 0-5 5V21"/><circle cx="12" cy="7.5" r="3.5"/>',audK:'<path d="M12 20.5l-7.4-7.2a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9a4.6 4.6 0 0 1 6.5 6.5z"/>',audS:'<path d="M16 20.5v-1.7a4 4 0 0 0-4-4H6.5a4 4 0 0 0-4 4v1.7"/><circle cx="9.2" cy="7.5" r="3.5"/><path d="M21.5 20.5v-1.7a4 4 0 0 0-3-3.9"/><path d="M15.5 4.2a3.5 3.5 0 0 1 0 6.6"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',home:'<path d="M3 20V9l9-6 9 6v11zM9 20v-6h6v6"/>',users:'<path d="M9 11a3 3 0 100-6 3 3 0 000 6zM3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 5.2a3 3 0 010 5.6M18 14.3c1.8.8 3 2.6 3 4.7"/>',flame:'<path d="M12 3c1 3 4 4 4 8a4 4 0 01-8 0c0-2 1-3 2-4 0 2 1 2 1 1 0-2 0-3 1-5zM8 21h8"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',mic:'<path d="M12 3a3 3 0 013 3v5a3 3 0 01-6 0V6a3 3 0 013-3zM5 11a7 7 0 0014 0M12 18v3"/>',trophy:'<path d="M7 4h10v5a5 5 0 01-10 0zM7 6H4v1a3 3 0 003 3M17 6h3v1a3 3 0 01-3 3M12 14v4M8 20h8"/>',target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',food:'<path d="M6 3v8a2 2 0 002 2v8M10 3v6M6 7h4M17 3c-2 2-3 5-3 8h3v10"/>',bed:'<path d="M3 18V7M3 14h18v4M21 14v-2a3 3 0 00-3-3h-7v5"/>'};
 function svg(name){const s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.setAttribute('viewBox','0 0 24 24');s.setAttribute('aria-hidden','true');s.innerHTML=IC[name]||IC.clock;return s}
 function icon(name,color,sq){const d=el('div','ic c-'+color+(sq?' sq':''));d.appendChild(svg(name));return d}
 let adm=false,D=null,K=null,tab='rundown',rDay='',kSeg='tim',gSeg='nilai',score=0,chosen='',q='',kq='',timer=null;
@@ -228,9 +236,24 @@ function render(){
  const v=$('#view');v.textContent='';
  document.querySelectorAll('nav button').forEach(b=>b.setAttribute('aria-selected',b.dataset.t===tab));
  const ab=$('#adm');ab.setAttribute('aria-pressed',adm);ab.setAttribute('aria-label',adm?'Matikan mode panitia':'Mode panitia');ab.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+(adm?UNLOCK:LOCK)+'</svg>';
- $('#sub').textContent={rundown:'Rundown',team:'Team',idol:gSeg==='nilai'?'Grow Idol · Nilai':'Grow Idol · Ranking live',kamar:'Kamar'}[tab];
+ $('#sub').textContent={rundown:'Rundown',team:'Team',idol:gSeg==='nilai'?'Grow Idol · Nilai':'Grow Idol · Ranking live',kamar:'Kamar',lokasi:'Lokasi'}[tab];
  if(!D){v.appendChild(el('div','empty','Memuat...'));return}
- ({rundown:rRundown,team:rTeam,idol:rIdol,kamar:rKamar})[tab](v);
+ ({rundown:rRundown,team:rTeam,idol:rIdol,kamar:rKamar,lokasi:rLokasi})[tab](v);
+}
+
+/* LOKASI */
+const MAPQ='Driam Riverside Resort, Jl. Raya Soreang-Ciwidey KM 25, Pasirjambu, Kabupaten Bandung';
+const FAC=[['door','Lobby dan resepsi','Check-in dan check-out','green'],['fork','Restaurant','Makan siang, makan malam, sarapan','amber'],['wave','Meeting Room','Pembukaan, Edu Moment, Contact Sphere','blue'],['cup','Lounge','Ramah tamah keluarga dan 121 Meeting','teal'],['flame','Area Api Unggun','Makan malam, barbeque, malam keakraban','orange'],['wave','Kolam','Kolam renang resort','blue'],['smile','Play Ground','Area bermain anak','pink'],['target','Lapangan','Teambuilding dan paintball','purple'],['camera','Scenic dan Coffee','Spot foto dan kopi','amber'],['tent','Glamping dan Luxcamp','Tenda menginap','green'],['park','Parkir','Area parkir luas','teal']];
+function rLokasi(v){
+ const back=el('button','ref','‹ Kembali');back.type='button';back.style.marginTop='18px';back.onclick=()=>{tab=prevTab;render()};v.appendChild(back);
+ const mw=el('div','mapw');const fr=document.createElement('iframe');fr.src='https://maps.google.com/maps?q='+encodeURIComponent(MAPQ)+'&hl=id&z=15&output=embed';fr.loading='lazy';fr.referrerPolicy='no-referrer-when-downgrade';fr.title='Peta lokasi Driam Riverside';mw.appendChild(fr);v.appendChild(mw);
+ const ad=el('div','addr');const ic=el('div','ib aS');ic.appendChild(svg('pin'));ad.appendChild(ic);const tx=el('div');tx.appendChild(el('b','','Driam Riverside Resort'));tx.appendChild(el('small','','Jl. Raya Soreang-Ciwidey KM 25, Cukanggenteng, Kec. Pasirjambu, Kab. Bandung, Jawa Barat 40972'));ad.appendChild(tx);v.appendChild(ad);
+ const bt=el('div','mrow');
+ const a1=el('a','go','Buka di Google Maps');a1.href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(MAPQ);
+ const a2=el('a','ref','Petunjuk arah');a2.href='https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(MAPQ);
+ [a1,a2].forEach(a=>{a.target='_blank';a.rel='noopener';a.style.textAlign='center';a.style.textDecoration='none';a.style.display='grid';a.style.placeItems='center'});bt.appendChild(a1);bt.appendChild(a2);v.appendChild(bt);
+ v.appendChild(el('h2','','Fasilitas'));
+ const g=el('div','fac');FAC.forEach(([i,n,d,c])=>{const f=el('div','fc');const b=el('div','ib a'+({green:'S',blue:'M',pink:'K'}[c]||'S'));b.className='ib t-'+c;b.appendChild(svg(i));f.appendChild(b);f.appendChild(el('b','',n));f.appendChild(el('small','',d));g.appendChild(f)});v.appendChild(g);
 }
 
 /* RUNDOWN */
@@ -621,6 +644,8 @@ function rKamar(v){
   });
  }
 }
+let prevTab='rundown';
+$('#loc').onclick=()=>{if(tab==='lokasi'){tab=prevTab}else{prevTab=tab;tab='lokasi'}render();window.scrollTo(0,0)};
 $('#adm').onclick=()=>{adm=!adm;if(adm){tab='team';kSeg='undi'}else if(kSeg==='undi')kSeg='tim';render();window.scrollTo(0,0)};
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render();window.scrollTo(0,0)});
 call('data').then(d=>{D=d;render()}).catch(e=>{$('#view').textContent='';const c=el('div');c.appendChild(el('div','msg err','Gagal memuat data: '+errMsg(e)));const b=el('button','go','Coba lagi');b.onclick=()=>location.reload();c.appendChild(b);$('#view').appendChild(c)});
