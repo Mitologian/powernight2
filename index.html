@@ -518,7 +518,7 @@ function tDoor(v){
    return call('dpPutar',{pin,winner:nm}).then(d=>{dpPin=pin;animate(d,nm)}).catch(e=>{busy=false;spinning=false;btn.disabled=false;if(/PIN/i.test(errMsg(e)))dpPin='';throw e});
   };
   if(dpPin)go(dpPin).catch(e=>msg(res,errMsg(e),false));
-  else pinModal('Putar doorprize',p=>go(p),'Masukkan PIN peserta agar hasil putaran tercatat. PIN panitia juga berlaku.','PIN peserta');
+  else pinModal('Putar doorprize',p=>go(p),'Hasil putaran hanya tercatat dengan PIN panitia.');
  }
  function animate(d,nm){
   shown=d.before;dpWheel(cv,shown,d.left+1);hubSet(d.left+1);
