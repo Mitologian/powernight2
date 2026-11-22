@@ -504,26 +504,22 @@ function tDoor(v){
   shown=S.lines.filter(l=>l.left>0);
   const wrap=el('div','wheelw');cv=el('canvas','wheel');cv.width=600;cv.height=600;cv.setAttribute('role','button');cv.tabIndex=0;cv.setAttribute('aria-label','Roda doorprize. Tap untuk memutar');wrap.appendChild(cv);wrap.appendChild(el('div','ptr'));hub=el('div','hub');wrap.appendChild(hub);ctl.appendChild(wrap);
   dpWheel(cv,shown,S.left);hubSet(S.left);
-  btn=el('button','go','Putar roda');btn.type='button';ctl.appendChild(btn);
+  btn=el('button','go','Putar roda');btn.type='button';ctl.appendChild(btn);{const h=el('p','mute','Putaran bebas dan belum tersimpan. Hasil baru tercatat saat panitia menekan Simpan dengan PIN.');h.style.textAlign='center';ctl.appendChild(h)}
   res=el('div');ctl.appendChild(res);
   btn.onclick=spin;cv.onclick=spin;cv.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();spin()}};
  }
  function spin(){
   if(busy)return;
-  const nm=inp.value.trim();
-  if(!nm){msg(res,'Isi nama pemenang dulu.',false);inp.focus();return}
-  if(!S.left){msg(res,'Semua hadiah sudah keluar.',false);return}
-  const go=pin=>{
-   busy=true;spinning=true;btn.disabled=true;res.textContent='';
-   return call('dpPutar',{pin,winner:nm}).then(d=>{dpPin=pin;animate(d,nm)}).catch(e=>{busy=false;spinning=false;btn.disabled=false;if(/PIN/i.test(errMsg(e)))dpPin='';throw e});
-  };
-  if(dpPin)go(dpPin).catch(e=>msg(res,errMsg(e),false));
-  else pinModal('Putar doorprize',p=>go(p),'Hasil putaran hanya tercatat dengan PIN panitia.');
+  const pool=S.lines.filter(l=>l.left>0),tot=pool.reduce((a,l)=>a+l.left,0);
+  if(!tot){msg(res,'Semua hadiah sudah keluar.',false);return}
+  busy=true;spinning=true;btn.disabled=true;res.textContent='';
+  let x=rnd(tot),pick=pool[0];for(const l of pool){if(x<l.left){pick=l;break}x-=l.left}
+  animate(pick,pool,tot);
  }
- function animate(d,nm){
-  shown=d.before;dpWheel(cv,shown,d.left+1);hubSet(d.left+1);
+ function animate(pick,pool,tot){
+  shown=pool;dpWheel(cv,shown,tot);hubSet(tot);
   cv.style.transition='none';cv.style.transform='none';rt=0;void cv.offsetWidth;
-  const n=shown.length,w=Math.max(0,shown.findIndex(l=>l.code===d.code)),s=360/n,jit=(Math.random()-.5)*s*.6;
+  const n=shown.length,w=Math.max(0,shown.findIndex(l=>l.code===pick.code)),s=360/n,jit=(Math.random()-.5)*s*.6;
   const target=((360-(w+.5)*s-jit)%360+360)%360;
   rt=360*6+target;
   const dur=matchMedia('(prefers-reduced-motion:reduce)').matches?300:5500;
@@ -531,13 +527,25 @@ function tDoor(v){
   setTimeout(()=>{
    spinning=false;busy=false;btn.disabled=false;
    res.textContent='';
-   const card=el('div','res');card.appendChild(el('div','k','HADIAH UNTUK '+nm.toUpperCase()));
-   const b=el('b','',d.item);b.style.cssText='display:block;text-align:center;font-size:21px;line-height:1.25';card.appendChild(b);
-   const sm=el('div','',d.donor?'dari '+d.donor:'');sm.style.cssText='text-align:center;color:var(--mute);margin-top:4px;font-size:14px';card.appendChild(sm);
-   const no=el('div','','Hadiah nomor '+(w+1)+' di roda · sisa '+d.left+' hadiah');no.style.cssText='text-align:center;color:var(--mute);margin-top:8px;font-size:12.5px';card.appendChild(no);
-   res.appendChild(card);confetti();hubSet(d.left);
-   inp.value='';warn.textContent='';
-   refresh().catch(()=>{});
+   const card=el('div','res');const k=el('div','k','HASIL PUTARAN · BELUM TERSIMPAN');card.appendChild(k);
+   const b=el('b','',pick.item);b.style.cssText='display:block;text-align:center;font-size:21px;line-height:1.25';card.appendChild(b);
+   const sm=el('div','',pick.donor?'dari '+pick.donor:'');sm.style.cssText='text-align:center;color:var(--mute);margin-top:4px;font-size:14px';card.appendChild(sm);
+   const no=el('div','','Hadiah nomor '+(w+1)+' di roda');no.style.cssText='text-align:center;color:var(--mute);margin-top:8px;font-size:12.5px';card.appendChild(no);
+   const row=el('div','mrow');const again=el('button','ref','Putar ulang');again.type='button';const sv=el('button','go','Simpan');sv.type='button';row.appendChild(again);row.appendChild(sv);card.appendChild(row);
+   again.onclick=spin;
+   const done=d=>{
+    k.textContent='TERSIMPAN';row.remove();{const m=card.querySelector('.msg');if(m)m.remove()}
+    const nm=el('div','','untuk '+d.winner);nm.style.cssText='text-align:center;font-weight:600;margin-top:10px';card.appendChild(nm);
+    confetti();hubSet(d.left);inp.value='';warn.textContent='';refresh().catch(()=>{});
+   };
+   sv.onclick=()=>{
+    const who=inp.value.trim();
+    if(!who){msg(card,'Isi nama pemenang dulu.',false);inp.focus();return}
+    const go=pin=>call('dpSimpan',{pin,winner:who,code:pick.code}).then(d=>{dpPin=pin;done(d)}).catch(e=>{if(/PIN/i.test(errMsg(e)))dpPin='';if(/habis/i.test(errMsg(e)))refresh().catch(()=>{});throw e});
+    if(dpPin){sv.disabled=true;go(dpPin).catch(e=>{sv.disabled=false;msg(card,errMsg(e),false)})}
+    else pinModal('Simpan hasil doorprize',go);
+   };
+   res.appendChild(card);
   },dur+250);
  }
  call('doorprize').then(d=>{S=d;top.textContent='';drawTop();build();drawList();timer=setInterval(()=>{if(!busy)call('doorprize').then(d=>{if(busy)return;S=d;drawTop();drawList();if(inp)note()}).catch(()=>{})},10000)}).catch(e=>{top.textContent='';msg(top,'Gagal memuat: '+errMsg(e),false)});
