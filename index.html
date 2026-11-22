@@ -184,7 +184,7 @@ label.l{display:block;font-size:12px;letter-spacing:.08em;text-transform:upperca
 <nav role="tablist">
 <button role="tab" data-t="rundown" aria-selected="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4"/></svg><span>Rundown</span></button>
 <button role="tab" data-t="kamar" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20V9l9-6 9 6v11zM9 20v-6h6v6"/></svg><span>Kamar</span></button>
-<button role="tab" data-t="idol" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 013 3v5a3 3 0 01-6 0V6a3 3 0 013-3zM5 11a7 7 0 0014 0M12 18v3"/></svg><span>Grow Idol</span></button>
+<button role="tab" data-t="idol" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 013 3v5a3 3 0 01-6 0V6a3 3 0 013-3zM5 11a7 7 0 0014 0M12 18v3"/></svg><span>Aktivitas</span></button>
 <button role="tab" data-t="team" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11a3 3 0 100-6 3 3 0 000 6zM3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 5.2a3 3 0 010 5.6M18 14.3c1.8.8 3 2.6 3 4.7"/></svg><span>Team</span></button>
 </nav>
 <script src="config.js"></script>
@@ -236,7 +236,7 @@ function render(){
  const v=$('#view');v.textContent='';
  document.querySelectorAll('nav button').forEach(b=>b.setAttribute('aria-selected',b.dataset.t===tab));
  const ab=$('#adm');ab.setAttribute('aria-pressed',adm);ab.setAttribute('aria-label',adm?'Matikan mode panitia':'Mode panitia');ab.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+(adm?UNLOCK:LOCK)+'</svg>';
- $('#sub').textContent={rundown:'Rundown',team:'Team',idol:gSeg==='nilai'?'Grow Idol · Nilai':'Grow Idol · Ranking live',kamar:'Kamar',lokasi:'Lokasi'}[tab];
+ $('#sub').textContent={rundown:'Rundown',team:'Team',idol:{nilai:'Aktivitas · Grow Idol',rank:'Aktivitas · Ranking live',door:'Aktivitas · Doorprize'}[gSeg],kamar:'Kamar',lokasi:'Lokasi'}[tab];
  if(!D){v.appendChild(el('div','empty','Memuat...'));return}
  ({rundown:rRundown,team:rTeam,idol:rIdol,kamar:rKamar,lokasi:rLokasi})[tab](v);
 }
@@ -313,10 +313,10 @@ function rRundown(v){
 /* TEAM */
 function rTeam(v){
  if(!adm&&kSeg==='undi')kSeg='tim';
- const items=[['tim','Tim']].concat(adm?[['undi','Undi lawan']]:[],[['lawan','Pertandingan'],['door','Doorprize']]);
+ const items=[['tim','Tim']].concat(adm?[['undi','Undi lawan']]:[],[['lawan','Pertandingan']]);
  v.appendChild(tabsBar(items,kSeg,k=>{kSeg=k;render()}));
  const body=el('div');v.appendChild(body);
- ({tim:tTim,undi:tUndi,lawan:tLawan,door:tDoor})[kSeg](body);
+ ({tim:tTim,undi:tUndi,lawan:tLawan})[kSeg](body);
 }
 const TCOL=['teal','blue','amber','green','purple','orange','pink','indigo'];
 function tTim(v){
@@ -340,11 +340,11 @@ function tTim(v){
  }
 }
 const shortN=n=>{const m=String(n).match(/^team\s*\d+/i);return m?m[0]:String(n).split(/\s+/).slice(0,2).join(' ')};
-function pinModal(title,run){
+function pinModal(title,run,hint,ph){
  const ov=el('div','ov'),bx=el('div','mod');ov.appendChild(bx);
  const h=el('h2','',title);h.style.marginTop='0';bx.appendChild(h);
- bx.appendChild(el('p','mute','Khusus panitia. Masukkan PIN panitia.'));
- const i=el('input');i.type='password';i.inputMode='numeric';i.placeholder='PIN panitia';i.setAttribute('aria-label','PIN panitia');i.autocomplete='off';i.style.marginTop='14px';bx.appendChild(i);
+ bx.appendChild(el('p','mute',hint||'Khusus panitia. Masukkan PIN panitia.'));
+ const i=el('input');i.type='password';i.inputMode='numeric';i.placeholder=ph||'PIN panitia';i.setAttribute('aria-label',ph||'PIN panitia');i.autocomplete='off';i.style.marginTop='14px';bx.appendChild(i);
  const row=el('div','mrow');const cn=el('button','ref','Batal');cn.type='button';const ok=el('button','go','Lanjut');ok.type='button';row.appendChild(cn);row.appendChild(ok);bx.appendChild(row);
  cn.onclick=()=>ov.remove();ov.onclick=e=>{if(e.target===ov)ov.remove()};
  i.onkeydown=e=>{if(e.key==='Enter')ok.click();if(e.key==='Escape')ov.remove()};
@@ -518,7 +518,7 @@ function tDoor(v){
    return call('dpPutar',{pin,winner:nm}).then(d=>{dpPin=pin;animate(d,nm)}).catch(e=>{busy=false;spinning=false;btn.disabled=false;if(/PIN/i.test(errMsg(e)))dpPin='';throw e});
   };
   if(dpPin)go(dpPin).catch(e=>msg(res,errMsg(e),false));
-  else pinModal('Putar doorprize',p=>go(p));
+  else pinModal('Putar doorprize',p=>go(p),'Masukkan PIN peserta agar hasil putaran tercatat. PIN panitia juga berlaku.','PIN peserta');
  }
  function animate(d,nm){
   shown=d.before;dpWheel(cv,shown,d.left+1);hubSet(d.left+1);
@@ -540,14 +540,14 @@ function tDoor(v){
    refresh().catch(()=>{});
   },dur+250);
  }
- call('doorprize').then(d=>{S=d;top.textContent='';drawTop();if(adm)build();drawList();timer=setInterval(()=>{if(!busy)call('doorprize').then(d=>{if(busy)return;S=d;drawTop();drawList();if(inp)note()}).catch(()=>{})},10000)}).catch(e=>{top.textContent='';msg(top,'Gagal memuat: '+errMsg(e),false)});
+ call('doorprize').then(d=>{S=d;top.textContent='';drawTop();build();drawList();timer=setInterval(()=>{if(!busy)call('doorprize').then(d=>{if(busy)return;S=d;drawTop();drawList();if(inp)note()}).catch(()=>{})},10000)}).catch(e=>{top.textContent='';msg(top,'Gagal memuat: '+errMsg(e),false)});
 }
 
 /* GROW IDOL */
 function rIdol(v){
- v.appendChild(tabsBar([['nilai','Nilai'],['rank','Ranking live',gSeg==='rank']],gSeg,k=>{gSeg=k;render()}));
+ v.appendChild(tabsBar([['nilai','Grow Idol'],['rank','Ranking',gSeg==='rank'],['door','Doorprize']],gSeg,k=>{gSeg=k;render()}));
  const body=el('div');v.appendChild(body);
- if(gSeg==='nilai')gNilai(body);else gRank(body);
+ if(gSeg==='nilai')gNilai(body);else if(gSeg==='door')tDoor(body);else gRank(body);
 }
 function gNilai(c){
  {const ib=el('div','intro'),tr=el('div','tr');tr.appendChild(svg('trophy'));ib.appendChild(tr);const p=el('p');p.appendChild(document.createTextNode('Siapakah performer terbaik di Power\u00a0Night\u00a02 malam ini?'));p.appendChild(el('b','','Beri nilai untuk Grow Idol Anda!'));ib.appendChild(p);c.appendChild(ib)}
@@ -582,7 +582,7 @@ function gNilai(c){
 }
 function gDone(n){
  const v=$('#view');v.textContent='';
- v.appendChild(tabsBar([['nilai','Nilai'],['rank','Ranking live']],'nilai',k=>{gSeg=k;render()}));
+ v.appendChild(tabsBar([['nilai','Grow Idol'],['rank','Ranking'],['door','Doorprize']],'nilai',k=>{gSeg=k;render()}));
  v.appendChild(el('div','msg okm','Nilai untuk '+n+' sudah tercatat. Terima kasih!'));
  const b=el('button','go','Nilai penyanyi berikutnya');b.type='button';b.onclick=render;v.appendChild(b);
 }
@@ -747,7 +747,7 @@ function rKamar(v){
 }
 let prevTab='rundown';
 $('#loc').onclick=()=>{if(tab==='lokasi'){tab=prevTab}else{prevTab=tab;tab='lokasi'}render();window.scrollTo(0,0)};
-$('#adm').onclick=()=>{adm=!adm;if(adm){tab='team';kSeg='undi'}else if(kSeg==='undi')kSeg='tim';render();window.scrollTo(0,0)};
+$('#adm').onclick=()=>{adm=!adm;if(adm){if(!(tab==='idol'&&gSeg==='door')){tab='team';kSeg='undi'}}else if(kSeg==='undi')kSeg='tim';render();window.scrollTo(0,0)};
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render();window.scrollTo(0,0)});
 call('data').then(d=>{D=d;render()}).catch(e=>{$('#view').textContent='';const c=el('div');c.appendChild(el('div','msg err','Gagal memuat data: '+errMsg(e)));const b=el('button','go','Coba lagi');b.onclick=()=>location.reload();c.appendChild(b);$('#view').appendChild(c)});
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
