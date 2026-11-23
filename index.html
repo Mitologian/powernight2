@@ -496,9 +496,9 @@ function tDoor(v){
  let S=null,busy=false,shown=[],rt=0;
  const top=el('div'),ctl=el('div'),lst=el('div');v.appendChild(top);v.appendChild(ctl);v.appendChild(lst);
  top.appendChild(el('p','mute','Memuat...'));
- const names=[...new Set((D.kelompok||[]).map(k=>k.name).concat((D.keluarga||[]).map(k=>k.name+' (Keluarga)')).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+ const memNames=[...new Set((D.kelompok||[]).map(k=>k.name).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
  const famNames=(D.keluarga||[]).map(k=>k.name).sort((a,b)=>a.localeCompare(b));
- let inp,warn,cv,btn,res,hub;
+ let inp,warn,cv,btn,res,hub,setWho=()=>{};
  function hubSet(n){hub.textContent='';hub.appendChild(el('b','',String(n)));hub.appendChild(el('small','','sisa'))}
  function drawTop(){
   top.textContent='';
@@ -520,6 +520,15 @@ function tDoor(v){
    w.appendChild(r);
   });
   lst.appendChild(w);
+  const won={};S.winners.forEach(x=>{won[x.winner.trim().toLowerCase()]=1});
+  const all=memNames.concat(famNames.map(n=>n+' (Keluarga)')),left=all.filter(n=>!won[n.toLowerCase()]);
+  if(all.length){
+   const nd=el('details','dpd');nd.open=true;nd.appendChild(el('summary','','Belum dapat hadiah ('+left.length+' dari '+all.length+')'));
+   const nc=el('div','dpc');
+   if(!left.length)nc.appendChild(el('div','empty','Semua sudah pernah dapat hadiah.'));
+   else{const ch=el('div','');ch.style.cssText='display:flex;flex-wrap:wrap;gap:8px;padding:12px';left.forEach(n=>{const p=el('span','pill',n);p.style.margin='0';ch.appendChild(p)});nc.appendChild(ch)}
+   nd.appendChild(nc);lst.appendChild(nd);
+  }
   const dt=el('details','dpd');dt.appendChild(el('summary','','Daftar hadiah ('+S.lines.length+' jenis)'));
   const cw=el('div','dpc');
   S.lines.forEach(l=>{const r=el('div','dpr');const t=el('div');t.appendChild(el('b','',l.item));t.appendChild(el('small','',l.donor?'dari '+l.donor:'donatur belum dicatat'));r.appendChild(t);const p=el('span','pill',l.left+'/'+l.qty);p.style.cssText='margin:0 0 0 auto;white-space:nowrap'+(l.left?'':';text-decoration:line-through');r.appendChild(p);cw.appendChild(r)});
@@ -529,11 +538,14 @@ function tDoor(v){
  function note(){const q=inp.value.trim().toLowerCase();const n=q?S.winners.filter(w=>w.winner.toLowerCase()===q).length:0;warn.textContent=n?inp.value.trim()+' sudah menang '+n+' hadiah.':''}
  function build(){
   ctl.textContent='';
-  const lab=el('label','l','Nama pemenang');lab.htmlFor='dpn';lab.style.marginTop='18px';ctl.appendChild(lab);
-  inp=el('input');inp.type='text';inp.id='dpn';inp.setAttribute('list','dpl');inp.placeholder='Ketik atau pilih nama';inp.autocomplete='off';ctl.appendChild(inp);
-  const dl=el('datalist');dl.id='dpl';names.forEach(n=>{const o=el('option');o.value=n;dl.appendChild(o)});ctl.appendChild(dl);
-  if(famNames.length){const fs=el('select');fs.setAttribute('aria-label','Pilih nama keluarga');fs.style.marginTop='10px';const f0=el('option','','Atau pilih nama keluarga');f0.value='';fs.appendChild(f0);famNames.forEach(n=>{const o=el('option','',n);o.value=n+' (Keluarga)';fs.appendChild(o)});fs.onchange=()=>{if(fs.value){inp.value=fs.value;inp.dispatchEvent(new Event('input'));fs.value=''}};ctl.appendChild(fs)}
-  warn=el('p','mute','');warn.style.minHeight='18px';ctl.appendChild(warn);inp.oninput=note;
+  const lab=el('label','l','Nama pemenang');lab.style.marginTop='18px';ctl.appendChild(lab);
+  inp=el('input');inp.type='hidden';inp.id='dpn';
+  const mk=(id,ph,list,val)=>{const sl=el('select');sl.id=id;sl.setAttribute('aria-label',ph);const o0=el('option','',ph);o0.value='';sl.appendChild(o0);list.forEach(n=>{const o=el('option','',n);o.value=val(n);sl.appendChild(o)});return sl};
+  const ms=mk('dpm','Pilih nama Member',memNames,n=>n);ctl.appendChild(ms);
+  const fs=famNames.length?mk('dpf','Pilih nama Keluarga',famNames,n=>n+' (Keluarga)'):null;if(fs){fs.style.marginTop='10px';ctl.appendChild(fs)}
+  setWho=v=>{inp.value=v||'';ms.value=v&&!/\(Keluarga\)$/.test(v)?v:'';if(fs)fs.value=v&&/\(Keluarga\)$/.test(v)?v:'';note()};
+  ms.onchange=()=>setWho(ms.value);if(fs)fs.onchange=()=>setWho(fs.value);
+  warn=el('p','mute','');warn.style.minHeight='18px';ctl.appendChild(warn);
   shown=S.lines.filter(l=>l.left>0);
   const wrap=el('div','wheelw');cv=el('canvas','wheel');cv.width=600;cv.height=600;cv.setAttribute('role','button');cv.tabIndex=0;cv.setAttribute('aria-label','Roda doorprize. Tap untuk memutar');wrap.appendChild(cv);wrap.appendChild(el('div','ptr'));hub=el('div','hub');wrap.appendChild(hub);ctl.appendChild(wrap);
   dpWheel(cv,shown,S.left);hubSet(S.left);
@@ -569,11 +581,11 @@ function tDoor(v){
    const done=d=>{
     k.textContent='TERSIMPAN';row.remove();{const m=card.querySelector('.msg');if(m)m.remove()}
     const nm=el('div','','untuk '+d.winner);nm.style.cssText='text-align:center;font-weight:600;margin-top:10px';card.appendChild(nm);
-    confetti();hubSet(d.left);inp.value='';warn.textContent='';refresh().catch(()=>{});
+    confetti();hubSet(d.left);setWho('');refresh().catch(()=>{});
    };
    sv.onclick=()=>{
     const who=inp.value.trim();
-    if(!who){msg(card,'Isi nama pemenang dulu.',false);inp.focus();return}
+    if(!who){msg(card,'Pilih nama pemenang dulu.',false);return}
     const go=pin=>call('dpSimpan',{pin,winner:who,code:pick.code}).then(d=>{dpPin=pin;done(d)}).catch(e=>{if(/PIN/i.test(errMsg(e)))dpPin='';if(/habis/i.test(errMsg(e)))refresh().catch(()=>{});throw e});
     if(dpPin){sv.disabled=true;go(dpPin).catch(e=>{sv.disabled=false;msg(card,errMsg(e),false)})}
     else pinModal('Simpan hasil doorprize',go);
@@ -599,11 +611,11 @@ function gNilai(c){
  const done=voted();
  const lab=el('label','l','Penilaian untuk siapa');lab.htmlFor='sg';c.appendChild(lab);
  const s=el('select');s.id='sg';
- const o0=el('option','','Pilih nama penyanyi');o0.value='';s.appendChild(o0);
+ const o0=el('option','','Pilih nama Member');o0.value='';s.appendChild(o0);
  D.singers.filter(x=>!x.fam).forEach(x=>{const o=el('option','',(done.includes(x.name)?'✓ ':'')+x.name);o.value=x.name;s.appendChild(o)});
  const fams=D.singers.filter(x=>x.fam);let s2=null;
  s.value=chosen;c.appendChild(s);
- if(fams.length){s2=el('select');s2.id='sg2';s2.setAttribute('aria-label','Penilaian untuk keluarga');s2.style.marginTop='10px';const p0=el('option','','Atau pilih nama keluarga');p0.value='';s2.appendChild(p0);fams.forEach(x=>{const o=el('option','',(done.includes(x.name)?'✓ ':'')+x.name.replace(/ \(Keluarga\)$/,''));o.value=x.name;s2.appendChild(o)});s2.value=fams.some(x=>x.name===chosen)?chosen:'';c.appendChild(s2)}
+ if(fams.length){s2=el('select');s2.id='sg2';s2.setAttribute('aria-label','Penilaian untuk keluarga');s2.style.marginTop='10px';const p0=el('option','','Pilih nama Keluarga');p0.value='';s2.appendChild(p0);fams.forEach(x=>{const o=el('option','',(done.includes(x.name)?'✓ ':'')+x.name.replace(/ \(Keluarga\)$/,''));o.value=x.name;s2.appendChild(o)});s2.value=fams.some(x=>x.name===chosen)?chosen:'';c.appendChild(s2)}
  const sc=el('div','score');sc.appendChild(el('div','k','SKOR DARI ANDA'));
  const dw=el('div','dialw'),ds=sv('svg',{viewBox:'0 0 200 108',class:'dial','aria-hidden':'true'});
  sv('path',{d:'M20 100A80 80 0 0 1 180 100',class:'tr'},ds);const arc=sv('path',{d:'M20 100A80 80 0 0 1 180 100',class:'pg','stroke-dasharray':'251.33'},ds);
