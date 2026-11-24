@@ -366,7 +366,8 @@ function tKel(v){
   const w=el('section','tm');const h=el('div','tmh t-'+col);h.appendChild(el('span','cnt',mem.length+' orang'));h.appendChild(el('b','',g));w.appendChild(h);
   const b=el('div','tmb');mem.forEach(r=>{const m=el('div','mem');m.appendChild(el('div','av t-'+col,initials(r.name)));
    const sp=el('span','',r.name);if(r.host){sp.appendChild(document.createElement('br'));const sm=el('small','','ikut '+r.host);sm.style.color='var(--mute)';sp.appendChild(sm)}m.appendChild(sp);
-   if(adm){const dx=el('button','dx','');dx.type='button';dx.style.position='static';dx.style.transform='none';dx.style.marginLeft='auto';dx.setAttribute('aria-label','Hapus '+r.name);dx.appendChild(svg('trash'));dx.onclick=()=>pinModal('Hapus '+r.name,p=>call('keluargaHapus',{pin:p,name:r.name}).then(reloadD));m.appendChild(dx)}
+   if(adm){const mv=el('button','ref','Pindah');mv.type='button';mv.style.cssText='margin-left:auto;padding:6px 12px;min-height:32px;font-size:13px';mv.setAttribute('aria-label','Pindahkan '+r.name+' ke tim lain');mv.onclick=()=>pinModal('Pindahkan '+r.name+' ke '+(g==='Keluarga 1'?'Keluarga 2':'Keluarga 1'),p=>call('keluargaPindah',{pin:p,name:r.name}).then(reloadD));m.appendChild(mv)}
+   if(adm){const dx=el('button','dx','');dx.type='button';dx.style.position='static';dx.style.transform='none';dx.style.marginLeft='8px';dx.setAttribute('aria-label','Hapus '+r.name);dx.appendChild(svg('trash'));dx.onclick=()=>pinModal('Hapus '+r.name,p=>call('keluargaHapus',{pin:p,name:r.name}).then(reloadD));m.appendChild(dx)}
    b.appendChild(m)});w.appendChild(b);v.appendChild(w);
  });
 }
