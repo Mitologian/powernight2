@@ -196,7 +196,7 @@ const API=window.PN_API||'';
 const C=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const isDark=()=>false;
 const LOCK='<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>',UNLOCK='<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 017.5-1.5"/>';
-const IC={plus:'<path d="M12 5v14M5 12h14"/>',minus:'<path d="M5 12h14"/>',swap:'<path d="M4 8h15M15 4l4 4-4 4M20 16H5M9 12l-4 4 4 4"/>',bridge:'<path d="M3 9v10M21 9v10M3 12c4 4 14 4 18 0M8 14v5M12 15v4M16 14v5"/>',leaf:'<path d="M5 19c0-8 5-14 15-14 0 10-6 15-14 15M5 19c3-5 6-8 10-10"/>',boat:'<path d="M3 15h18l-2 4H5zM12 3v10M12 4l6 8h-6"/>',trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/>',pin:'<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.800 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',fork:'<path d="M5 3v7a2 2 0 0 0 4 0V3M7 3v18M17 3c-2 2-3 5-3 8h3v10"/>',wave:'<path d="M3 8c2-2 4-2 6 0s4 2 6 0 4-2 6 0M3 14c2-2 4-2 6 0s4 2 6 0 4-2 6 0M3 20c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/>',tent:'<path d="M3 20L12 4l9 16zM12 4v16M9 20l3-6 3 6"/>',camera:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',park:'<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9.5 16V8h3.2a2.5 2.5 0 0 1 0 5H9.5"/>',cup:'<path d="M5 8h11v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4zM16 9h2a2 2 0 0 1 0 4h-2M8 3v2M12 3v2"/>',door:'<path d="M6 21V4h12v17M4 21h16M14 12v.01"/>',smile:'<circle cx="12" cy="12" r="9"/><path d="M8 14c1 1.5 2.3 2 4 2s3-.5 4-2M9 9.500v.01M15 9.500v.01"/>',lock:LOCK,trophy:'<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>',audM:'<path d="M19 21v-1.5a5 5 0 0 0-5-5h-4a5 5 0 0 0-5 5V21"/><circle cx="12" cy="7.5" r="3.5"/>',audK:'<path d="M12 20.5l-7.4-7.2a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9a4.6 4.6 0 0 1 6.5 6.5z"/>',audS:'<path d="M16 20.5v-1.7a4 4 0 0 0-4-4H6.5a4 4 0 0 0-4 4v1.7"/><circle cx="9.2" cy="7.5" r="3.5"/><path d="M21.5 20.5v-1.7a4 4 0 0 0-3-3.9"/><path d="M15.5 4.2a3.5 3.5 0 0 1 0 6.6"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',home:'<path d="M3 20V9l9-6 9 6v11zM9 20v-6h6v6"/>',users:'<path d="M9 11a3 3 0 100-6 3 3 0 000 6zM3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 5.2a3 3 0 010 5.6M18 14.3c1.8.8 3 2.6 3 4.7"/>',flame:'<path d="M12 3c1 3 4 4 4 8a4 4 0 01-8 0c0-2 1-3 2-4 0 2 1 2 1 1 0-2 0-3 1-5zM8 21h8"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',mic:'<path d="M12 3a3 3 0 013 3v5a3 3 0 01-6 0V6a3 3 0 013-3zM5 11a7 7 0 0014 0M12 18v3"/>',trophy:'<path d="M7 4h10v5a5 5 0 01-10 0zM7 6H4v1a3 3 0 003 3M17 6h3v1a3 3 0 01-3 3M12 14v4M8 20h8"/>',target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',food:'<path d="M6 3v8a2 2 0 002 2v8M10 3v6M6 7h4M17 3c-2 2-3 5-3 8h3v10"/>',bed:'<path d="M3 18V7M3 14h18v4M21 14v-2a3 3 0 00-3-3h-7v5"/>'};
+const IC={ckon:'<circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/>',ckoff:'<circle cx="12" cy="12" r="9"/>',key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3M14 9l2 2"/>',xx:'<path d="M6 6l12 12M18 6L6 18"/>',plus:'<path d="M12 5v14M5 12h14"/>',minus:'<path d="M5 12h14"/>',swap:'<path d="M4 8h15M15 4l4 4-4 4M20 16H5M9 12l-4 4 4 4"/>',bridge:'<path d="M3 9v10M21 9v10M3 12c4 4 14 4 18 0M8 14v5M12 15v4M16 14v5"/>',leaf:'<path d="M5 19c0-8 5-14 15-14 0 10-6 15-14 15M5 19c3-5 6-8 10-10"/>',boat:'<path d="M3 15h18l-2 4H5zM12 3v10M12 4l6 8h-6"/>',trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/>',pin:'<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.800 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',fork:'<path d="M5 3v7a2 2 0 0 0 4 0V3M7 3v18M17 3c-2 2-3 5-3 8h3v10"/>',wave:'<path d="M3 8c2-2 4-2 6 0s4 2 6 0 4-2 6 0M3 14c2-2 4-2 6 0s4 2 6 0 4-2 6 0M3 20c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/>',tent:'<path d="M3 20L12 4l9 16zM12 4v16M9 20l3-6 3 6"/>',camera:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',park:'<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9.5 16V8h3.2a2.5 2.5 0 0 1 0 5H9.5"/>',cup:'<path d="M5 8h11v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4zM16 9h2a2 2 0 0 1 0 4h-2M8 3v2M12 3v2"/>',door:'<path d="M6 21V4h12v17M4 21h16M14 12v.01"/>',smile:'<circle cx="12" cy="12" r="9"/><path d="M8 14c1 1.5 2.3 2 4 2s3-.5 4-2M9 9.500v.01M15 9.500v.01"/>',lock:LOCK,trophy:'<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>',audM:'<path d="M19 21v-1.5a5 5 0 0 0-5-5h-4a5 5 0 0 0-5 5V21"/><circle cx="12" cy="7.5" r="3.5"/>',audK:'<path d="M12 20.5l-7.4-7.2a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9a4.6 4.6 0 0 1 6.5 6.5z"/>',audS:'<path d="M16 20.5v-1.7a4 4 0 0 0-4-4H6.5a4 4 0 0 0-4 4v1.7"/><circle cx="9.2" cy="7.5" r="3.5"/><path d="M21.5 20.5v-1.7a4 4 0 0 0-3-3.9"/><path d="M15.5 4.2a3.5 3.5 0 0 1 0 6.6"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',home:'<path d="M3 20V9l9-6 9 6v11zM9 20v-6h6v6"/>',users:'<path d="M9 11a3 3 0 100-6 3 3 0 000 6zM3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 5.2a3 3 0 010 5.6M18 14.3c1.8.8 3 2.6 3 4.7"/>',flame:'<path d="M12 3c1 3 4 4 4 8a4 4 0 01-8 0c0-2 1-3 2-4 0 2 1 2 1 1 0-2 0-3 1-5zM8 21h8"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',mic:'<path d="M12 3a3 3 0 013 3v5a3 3 0 01-6 0V6a3 3 0 013-3zM5 11a7 7 0 0014 0M12 18v3"/>',trophy:'<path d="M7 4h10v5a5 5 0 01-10 0zM7 6H4v1a3 3 0 003 3M17 6h3v1a3 3 0 01-3 3M12 14v4M8 20h8"/>',target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',food:'<path d="M6 3v8a2 2 0 002 2v8M10 3v6M6 7h4M17 3c-2 2-3 5-3 8h3v10"/>',bed:'<path d="M3 18V7M3 14h18v4M21 14v-2a3 3 0 00-3-3h-7v5"/>'};
 function svg(name){const s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.setAttribute('viewBox','0 0 24 24');s.setAttribute('aria-hidden','true');s.innerHTML=IC[name]||IC.clock;return s}
 function icon(name,color,sq){const d=el('div','ic c-'+color+(sq?' sq':''));d.appendChild(svg(name));return d}
 let adm=false,D=null,K=null,tab='rundown',rDay='',kSeg='tim',gSeg='nilai',score=0,chosen='',q='',kq='',timer=null;
@@ -684,7 +684,7 @@ const PL=()=>isDark()?DPAL:PAL;
 function bedIcon(col){const d=el('div','ic sq rm-'+col);d.appendChild(svg('bed'));return d}
 const tcol=t=>(TYPES.find(x=>x[0]===t)||[0,'gray'])[1];
 const tlabel=t=>String(t).replace(/Riverview/g,'River View');
-let kmSeg='daftar';
+let kmSeg='daftar',A=null,ckPin='',ckF='semua';
 const NS='http://www.w3.org/2000/svg';
 function sv(tag,at,par,txt){const e=document.createElementNS(NS,tag);for(const k in at)e.setAttribute(k,at[k]);if(txt!==undefined)e.textContent=txt;if(par)par.appendChild(e);return e}
 /* Denah. Koordinat resort = denah venue (x barat-timur, y utara-selatan), diputar 90 derajat agar memanjang ke bawah */
@@ -775,12 +775,69 @@ function drawDenah(box,nd){
  if(missing.length)box.appendChild(el('p','mute','Belum ada di denah: '+missing.join(', ')+'. Lihat tab Daftar.'));
  if(anyHit){const f=box.querySelector('.mapt[data-no="'+[...hits][0]+'"]');if(f)setTimeout(()=>f.scrollIntoView({behavior:'smooth',block:'center'}),150)}
 }
+function drawCek(list,rooms,redraw){
+ if(!A){list.appendChild(el('p','mute','Memuat absen...'));return}
+ const hs=new Set(A.hadir.map(h=>h.room+'|'+h.name)),kn={};A.kunci.forEach(k=>{kn[k.room]=k});const kl={};A.kel.forEach(k=>{kl[k.room]=k});
+ const ppl=K.reduce((a,r)=>a+r.names.length+(r.family||0),0),hdr=A.hadir.length+A.kel.reduce((a,k)=>a+k.n,0);
+ const st=el('div','stats');[[hdr+'/'+ppl,'Hadir'],[A.kunci.length+'/'+K.length,'Kunci diambil']].forEach(([n,l])=>{const d=el('div','stat');d.appendChild(el('b','',n));d.appendChild(el('span','',l));st.appendChild(d)});list.appendChild(st);
+ if(!adm){const p=el('p','mute','Mode lihat saja. Buka gembok panitia untuk mengisi.');p.style.margin='0 0 10px';list.appendChild(p)}
+ const fl=el('div','');fl.style.cssText='display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px';
+ [['semua','Semua'],['h0','Belum hadir'],['k0','Belum ambil kunci']].forEach(([k,t])=>{const b=el(k===ckF?'button':'button',k===ckF?'go':'ref',t);b.type='button';b.style.cssText='padding:6px 14px;min-height:34px;font-size:13px;width:auto';b.onclick=()=>{ckF=k;redraw()};fl.appendChild(b)});list.appendChild(fl);
+ const status=r=>({h0:r.names.some(n=>!hs.has(r.no+'|'+n))||((r.family||0)>((kl[r.no]||{}).n||0)),k0:!kn[r.no]});
+ const rs=rooms.filter(r=>ckF==='semua'||(ckF==='h0'&&status(r).h0)||(ckF==='k0'&&status(r).k0)).sort((a,b)=>a.no.localeCompare(b.no,undefined,{numeric:true}));
+ if(!rs.length){list.appendChild(el('div','empty','Tidak ada kamar di filter ini.'));return}
+ const act=(payload,title)=>{
+  const run=pin=>call('absenSet',Object.assign({pin},payload)).then(d=>{ckPin=pin;A=d;redraw()}).catch(e=>{if(/PIN/i.test(errMsg(e)))ckPin='';throw e});
+  if(ckPin)run(ckPin).catch(e=>{const m=list.querySelector('.msg');if(m)m.remove();msg(list,errMsg(e),false)});else pinModal(title,run);
+ };
+ const ic=(n,col)=>{const g=svg(n);g.style.cssText='width:24px;height:24px;fill:none;stroke:'+col+';stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none';return g};
+ const small=(b,t,fn)=>{const x=el('button','ref',t);x.type='button';x.style.cssText='margin-left:auto;padding:6px 14px;min-height:34px;font-size:13px;width:auto';x.onclick=fn;return x};
+ rs.forEach(r=>{
+  const col=tcol(r.type),w=el('div','room');w.style.marginBottom='10px';
+  const h=el('div','rh rm-'+col);h.appendChild(el('b','',r.no));h.appendChild(el('small','',tlabel(r.type)));w.appendChild(h);
+  const bd=el('div','');bd.style.padding='4px 0';
+  r.names.forEach(n=>{
+   const on=hs.has(r.no+'|'+n),t=(A.hadir.find(x=>x.room===r.no&&x.name===n)||{}).time;
+   const row=el(adm?'button':'div','');row.style.cssText='display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;padding:9px 12px;text-align:left;font:inherit;color:inherit;min-height:44px'+(adm?';cursor:pointer':'');
+   if(adm){row.type='button';row.setAttribute('aria-pressed',on?'true':'false');row.onclick=()=>act({kind:'hadir',room:r.no,name:n,on:!on},'Hadir: '+n)}
+   row.appendChild(ic(on?'ckon':'ckoff',on?'var(--green-d)':'var(--mute)'));
+   const nm=el('span','',n);nm.style.flex='1';row.appendChild(nm);
+   if(on&&t){const tt=el('small','',t);tt.style.color='var(--mute)';row.appendChild(tt)}
+   bd.appendChild(row);
+  });
+  if(r.family){
+   const k=(kl[r.no]||{}).n||0,row=el('div','');row.style.cssText='display:flex;align-items:center;gap:10px;padding:6px 12px;min-height:44px';
+   row.appendChild(ic(k>=r.family?'ckon':'ckoff',k>=r.family?'var(--green-d)':'var(--mute)'));
+   const nm=el('span','','Keluarga hadir '+k+' dari '+r.family);nm.style.flex='1';row.appendChild(nm);
+   if(adm){const mn=small(null,'−',()=>act({kind:'kel',room:r.no,n:k-1},'Keluarga hadir'));mn.setAttribute('aria-label','Kurangi keluarga hadir');mn.style.marginLeft='0';mn.style.width='40px';mn.style.padding='0';const pl=small(null,'+',()=>act({kind:'kel',room:r.no,n:k+1},'Keluarga hadir'));pl.setAttribute('aria-label','Tambah keluarga hadir');pl.style.marginLeft='6px';pl.style.width='40px';pl.style.padding='0';row.appendChild(mn);row.appendChild(pl)}
+   bd.appendChild(row);
+  }
+  w.appendChild(bd);
+  const ky=el('div','');ky.style.cssText='display:flex;align-items:center;gap:10px;padding:8px 12px;border-top:1px solid var(--line,rgba(0,0,0,.08));min-height:52px';
+  const kk=kn[r.no];ky.appendChild(ic('key',kk?'var(--green-d)':'var(--mute)'));
+  const kt=el('span','',kk?'Kunci diambil '+kk.name+(kk.time?' · '+kk.time:''):'Kunci belum diambil');kt.style.flex='1';ky.appendChild(kt);
+  if(adm){
+   if(kk){const u=small(null,'',()=>act({kind:'kunci',room:r.no,on:false},'Batalkan kunci kamar '+r.no));u.appendChild(svg('xx'));u.style.cssText+=';width:40px;padding:0;display:inline-flex;align-items:center;justify-content:center';u.firstChild.style.cssText='width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round';u.setAttribute('aria-label','Batalkan kunci kamar '+r.no);ky.appendChild(u)}
+   else{const g=small(null,'Ambil kunci',()=>keyPick(r,act));g.className='go';g.style.cssText='margin-left:auto;padding:8px 16px;min-height:38px;font-size:14px;width:auto';ky.appendChild(g)}
+  }
+  w.appendChild(ky);list.appendChild(w);
+ });
+}
+function keyPick(r,act){
+ const ov=el('div','ov'),bx=el('div','mod');ov.appendChild(bx);
+ const h=el('h2','','Siapa yang mengambil kunci '+r.no+'?');h.style.marginTop='0';bx.appendChild(h);
+ const mk=n=>{const b=el('button','ref',n);b.type='button';b.style.cssText='display:block;width:100%;text-align:left;margin-top:8px;min-height:46px';b.onclick=()=>{ov.remove();act({kind:'kunci',room:r.no,name:n,on:true},'Ambil kunci '+r.no)};bx.appendChild(b)};
+ r.names.forEach(mk);if(r.family)mk('Keluarga');
+ const cn=el('button','ref','Batal');cn.type='button';cn.style.cssText='display:block;width:100%;margin-top:14px';cn.onclick=()=>ov.remove();bx.appendChild(cn);
+ ov.onclick=e=>{if(e.target===ov)ov.remove()};document.body.appendChild(ov);
+}
 function rKamar(v){
- v.appendChild(tabsBar([['daftar','Daftar'],['denah','Denah']],kmSeg,k=>{kmSeg=k;render()}));
+ v.appendChild(tabsBar([['daftar','Daftar'],['denah','Denah'],['cek','Check-in']],kmSeg,k=>{kmSeg=k;render()}));
  const sw=el('div','sch'),s=el('input');s.type='search';s.placeholder='Cari nama atau nomor kamar';s.value=kq;s.setAttribute('aria-label','Cari kamar');sw.appendChild(svg('search'));sw.appendChild(s);v.appendChild(sw);
  const list=el('div');v.appendChild(list);
  if(!K){list.appendChild(el('p','mute','Memuat kamar...'));
   call('kamar').then(d=>{K=d.rooms||[];render()}).catch(e=>{list.textContent='';list.appendChild(el('div','msg err','Data kamar belum tersedia ('+errMsg(e)+'). Perbarui Apps Script ke versi terbaru.'))});return}
+ if(kmSeg==='cek'&&!A){call('absen').then(d=>{A=d;render()}).catch(e=>{A={hadir:[],kunci:[],kel:[]};render()})}
  let tm=null;
  s.oninput=()=>{kq=s.value;if(kmSeg==='denah'){clearTimeout(tm);tm=setTimeout(draw,250)}else draw()};draw();
  function found(nd,rooms){
@@ -788,8 +845,9 @@ function rKamar(v){
  }
  function draw(){
   list.textContent='';const nd=kq.trim().toLowerCase();
-  {const occ=K.filter(r=>r.names.length||r.family),mem=K.reduce((a,r)=>a+r.names.length,0),ppl=K.reduce((a,r)=>a+r.names.length+(r.family||0),0),ty=new Set(occ.map(r=>r.type)).size,st=el('div','stats');[[mem,'Member'],[ppl,'Peserta'],[occ.length,'Kamar'],[ty,'Tipe']].forEach(([n,l])=>{const d=el('div','stat');d.appendChild(el('b','',String(n)));d.appendChild(el('span','',l));st.appendChild(d)});list.appendChild(st)}
+  if(kmSeg!=='cek'){const occ=K.filter(r=>r.names.length||r.family),mem=K.reduce((a,r)=>a+r.names.length,0),ppl=K.reduce((a,r)=>a+r.names.length+(r.family||0),0),ty=new Set(occ.map(r=>r.type)).size,st=el('div','stats');[[mem,'Member'],[ppl,'Peserta'],[occ.length,'Kamar'],[ty,'Tipe']].forEach(([n,l])=>{const d=el('div','stat');d.appendChild(el('b','',String(n)));d.appendChild(el('span','',l));st.appendChild(d)});list.appendChild(st)}
   const rooms=K.filter(r=>!nd||(r.no+' '+r.names.join(' ')).toLowerCase().includes(nd));
+  if(kmSeg==='cek'){drawCek(list,rooms,draw);return}
   if(kmSeg==='denah'){
    if(nd&&rooms.length)list.appendChild(found(nd,rooms));
    else if(nd)list.appendChild(el('div','empty','Tidak ada yang cocok.'));
@@ -817,7 +875,7 @@ function rKamar(v){
 }
 let prevTab='rundown';
 $('#loc').onclick=()=>{if(tab==='lokasi'){tab=prevTab}else{prevTab=tab;tab='lokasi'}render();window.scrollTo(0,0)};
-$('#adm').onclick=()=>{adm=!adm;if(adm){if(!(tab==='idol'&&gSeg==='door')){tab='team';kSeg='undi'}}else if(kSeg==='undi')kSeg='tim';render();window.scrollTo(0,0)};
+$('#adm').onclick=()=>{adm=!adm;if(adm){if(!(tab==='idol'&&gSeg==='door')&&!(tab==='kamar'&&kmSeg==='cek')){tab='team';kSeg='undi'}}else if(kSeg==='undi')kSeg='tim';render();window.scrollTo(0,0)};
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render();window.scrollTo(0,0)});
 call('data').then(d=>{D=d;render()}).catch(e=>{$('#view').textContent='';const c=el('div');c.appendChild(el('div','msg err','Gagal memuat data: '+errMsg(e)));const b=el('button','go','Coba lagi');b.onclick=()=>location.reload();c.appendChild(b);$('#view').appendChild(c)});
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
