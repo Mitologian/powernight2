@@ -32,7 +32,7 @@ main{max-width:560px;margin:0 auto;padding:0 16px 24px}
 .tabs button{flex:1;border:0;background:none;padding:10px 6px;border-radius:11px;font:inherit;font-size:14px;font-weight:500;color:var(--mute);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
 .tabs button[aria-pressed="true"]{background:var(--card);color:var(--fg);font-weight:600;box-shadow:0 1px 3px rgba(16,24,40,.14)}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--red);animation:pulse 1.4s infinite}@keyframes pulse{50%{opacity:.25}}
-nav{position:fixed;left:14px;right:14px;max-width:532px;margin:0 auto;bottom:calc(14px + env(safe-area-inset-bottom,0px));height:64px;background:var(--card);border-radius:24px;box-shadow:0 2px 6px rgba(16,24,40,.08),0 12px 32px rgba(16,24,40,.16);display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:6px;z-index:8}
+nav{position:fixed;left:14px;right:14px;max-width:532px;margin:0 auto;bottom:calc(14px + env(safe-area-inset-bottom,0px));height:64px;background:var(--card);border-radius:24px;box-shadow:0 2px 6px rgba(16,24,40,.08),0 12px 32px rgba(16,24,40,.16);display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:6px;z-index:8}
 nav button{border:0;background:none;padding:0;border-radius:18px;font:inherit;font-size:10.5px;color:var(--mute);cursor:pointer;font-weight:500;display:grid;justify-items:center;align-content:center;gap:2px}
 nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 nav button[aria-selected="true"]{color:var(--red-t);background:var(--red-soft);font-weight:600}
@@ -186,6 +186,7 @@ label.l{display:block;font-size:12px;letter-spacing:.08em;text-transform:upperca
 <button role="tab" data-t="rundown" aria-selected="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4"/></svg><span>Rundown</span></button>
 <button role="tab" data-t="kamar" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20V9l9-6 9 6v11zM9 20v-6h6v6"/></svg><span>Kamar</span></button>
 <button role="tab" data-t="idol" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 013 3v5a3 3 0 01-6 0V6a3 3 0 013-3zM5 11a7 7 0 0014 0M12 18v3"/></svg><span>Aktivitas</span></button>
+<button role="tab" data-t="galeri" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 15l5-5 4 4 3-3 4 4M15 9h.01"/></svg><span>Galeri</span></button>
 <button role="tab" data-t="team" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11a3 3 0 100-6 3 3 0 000 6zM3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 5.2a3 3 0 010 5.6M18 14.3c1.8.8 3 2.6 3 4.7"/></svg><span>Peserta</span></button>
 </nav>
 <script src="config.js"></script>
@@ -237,9 +238,9 @@ function render(){
  const v=$('#view');v.textContent='';
  document.querySelectorAll('nav button').forEach(b=>b.setAttribute('aria-selected',b.dataset.t===tab));
  const ab=$('#adm');ab.setAttribute('aria-pressed',adm);ab.setAttribute('aria-label',adm?'Matikan mode panitia':'Mode panitia');ab.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+(adm?UNLOCK:LOCK)+'</svg>';
- $('#sub').textContent={rundown:'Rundown',team:'Peserta',idol:{nilai:'Aktivitas · Grow Idol',rank:'Aktivitas · Ranking live',door:'Aktivitas · Doorprize'}[gSeg],kamar:'Kamar',lokasi:'Lokasi'}[tab];
+ $('#sub').textContent={rundown:'Rundown',team:'Peserta',idol:{nilai:'Aktivitas · Grow Idol',rank:'Aktivitas · Ranking live',door:'Aktivitas · Doorprize'}[gSeg],kamar:'Kamar',lokasi:'Lokasi',galeri:'Galeri'}[tab];
  if(!D){v.appendChild(el('div','empty','Memuat...'));return}
- ({rundown:rRundown,team:rTeam,idol:rIdol,kamar:rKamar,lokasi:rLokasi})[tab](v);
+ ({rundown:rRundown,team:rTeam,idol:rIdol,kamar:rKamar,lokasi:rLokasi,galeri:rGaleri})[tab](v);
 }
 
 /* LOKASI */
@@ -774,6 +775,71 @@ function drawDenah(box,nd){
  const missing=K.filter(r=>!RES.some(x=>x[0]===r.no)&&!GLM.some(x=>x[0]===r.no)&&!LUX.some(x=>x[0]===r.no)).map(r=>r.no);
  if(missing.length)box.appendChild(el('p','mute','Belum ada di denah: '+missing.join(', ')+'. Lihat tab Daftar.'));
  if(anyHit){const f=box.querySelector('.mapt[data-no="'+[...hits][0]+'"]');if(f)setTimeout(()=>f.scrollIntoView({behavior:'smooth',block:'center'}),150)}
+}
+
+const GAL_URL='https://drive.google.com/drive/folders/1MG6icZtyQj1scM0Ly1KNSCD_fxDwMgmW';
+let GL=null,glBusy=false;
+function rGaleri(v){
+ const up=el('div','card');up.style.padding='16px';
+ up.appendChild(el('h2','','Unggah foto atau video'));
+ const nm=el('input');nm.type='text';nm.placeholder='Nama Anda (opsional)';nm.setAttribute('aria-label','Nama Anda');nm.style.margin='10px 0';
+ try{nm.value=localStorage.getItem('pn2name')||''}catch(e){}
+ nm.oninput=()=>{try{localStorage.setItem('pn2name',nm.value)}catch(e){}};up.appendChild(nm);
+ const fi=el('input');fi.type='file';fi.accept='image/*,video/*';fi.multiple=true;fi.style.display='none';fi.setAttribute('aria-label','Pilih foto atau video');
+ const pick=el('button','go','Pilih foto atau video');pick.type='button';pick.style.width='100%';pick.onclick=()=>fi.click();
+ up.appendChild(pick);up.appendChild(fi);
+ const st=el('p','mute','Foto dikecilkan otomatis. Video sampai 25 MB bisa diunggah di sini.');st.style.marginBottom='0';up.appendChild(st);
+ const big=el('a','ref','Video besar? Unggah lewat folder Drive');big.href=GAL_URL;big.target='_blank';big.rel='noopener';big.style.cssText='display:block;text-align:center;margin-top:10px;text-decoration:none;padding:10px';up.appendChild(big);
+ v.appendChild(up);
+ const grid=el('div','');grid.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:16px';
+ const hd=el('div','');hd.style.cssText='display:flex;align-items:center;margin-top:20px';const t=el('h2','','Galeri');t.style.margin='0';hd.appendChild(t);
+ const rf=el('button','ref','Muat ulang');rf.type='button';rf.style.cssText='margin-left:auto;padding:6px 14px;min-height:34px;font-size:13px;width:auto';hd.appendChild(rf);v.appendChild(hd);v.appendChild(grid);
+ const draw=()=>{
+  grid.textContent='';
+  if(!GL){grid.style.display='block';grid.appendChild(el('p','mute','Memuat galeri...'));return}
+  if(!GL.length){grid.style.display='block';grid.appendChild(el('div','empty','Belum ada foto atau video. Jadilah yang pertama.'));return}
+  grid.style.display='grid';
+  GL.forEach(f=>{
+   const b=el('button','');b.type='button';b.style.cssText='position:relative;padding:0;border:0;background:var(--soft);aspect-ratio:1;border-radius:10px;overflow:hidden;cursor:pointer';b.setAttribute('aria-label',(f.mime.startsWith('video')?'Video ':'Foto ')+(f.by?'dari '+f.by:f.name));
+   const im=el('img');im.loading='lazy';im.alt='';im.src='https://drive.google.com/thumbnail?id='+f.id+'&sz=w400';im.style.cssText='width:100%;height:100%;object-fit:cover;display:block';b.appendChild(im);
+   if(f.mime.startsWith('video')){const pl=el('span','','▶');pl.style.cssText='position:absolute;right:6px;bottom:6px;background:rgba(0,0,0,.6);color:#fff;border-radius:99px;padding:2px 8px;font-size:12px';b.appendChild(pl)}
+   b.onclick=()=>galView(f);grid.appendChild(b);
+  });
+ };
+ const load=()=>call('galeri').then(d=>{GL=d.files;draw()}).catch(e=>{if(!GL)GL=[];draw();msg(v,errMsg(e),false)});
+ rf.onclick=load;draw();if(!GL||true)load();
+ const toB64=blob=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(',')[1]);r.onerror=()=>rej(new Error('Gagal membaca file.'));r.readAsDataURL(blob)});
+ const shrink=file=>new Promise(res=>{
+  if(!file.type.startsWith('image/')||/gif|svg/.test(file.type))return res(file);
+  const u=URL.createObjectURL(file),i=new Image();
+  i.onload=()=>{const k=Math.min(1,1920/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);c.getContext('2d').drawImage(i,0,0,c.width,c.height);URL.revokeObjectURL(u);c.toBlob(b=>res(b?new File([b],file.name.replace(/\.\w+$/,'')+'.jpg',{type:'image/jpeg'}):file),'image/jpeg',.85)};
+  i.onerror=()=>{URL.revokeObjectURL(u);res(file)};i.src=u;
+ });
+ fi.onchange=async()=>{
+  if(glBusy||!fi.files.length)return;glBusy=true;pick.disabled=true;
+  const list=[...fi.files],fail=[];let ok=0;
+  for(let n=0;n<list.length;n++){
+   st.textContent='Mengunggah '+(n+1)+' dari '+list.length+'...';
+   try{
+    const f=await shrink(list[n]);
+    if(f.size>25*1024*1024){fail.push(list[n].name+' (lebih dari 25 MB)');continue}
+    await call('galeriUpload',{by:nm.value.trim(),filename:f.name,mime:f.type||'application/octet-stream',data:await toB64(f)});ok++;
+   }catch(e){fail.push(list[n].name+' ('+errMsg(e)+')')}
+  }
+  glBusy=false;pick.disabled=false;fi.value='';
+  st.textContent=ok?ok+' file terunggah.':'Tidak ada file yang terunggah.';
+  if(fail.length)msg(v,'Gagal: '+fail.join(', ')+'. Untuk file besar gunakan folder Drive.',false);
+  if(ok){confetti();load()}
+ };
+}
+function galView(f){
+ const ov=el('div','ov'),bx=el('div','mod');bx.style.cssText+=';max-width:560px;width:calc(100% - 24px)';ov.appendChild(bx);
+ const isV=f.mime.startsWith('video');
+ if(isV){const fr=document.createElement('iframe');fr.src='https://drive.google.com/file/d/'+f.id+'/preview';fr.allow='autoplay';fr.style.cssText='width:100%;aspect-ratio:16/10;border:0;border-radius:12px;background:#000';fr.title='Video';bx.appendChild(fr)}
+ else{const im=el('img');im.src='https://drive.google.com/thumbnail?id='+f.id+'&sz=w1600';im.alt=f.by?'Foto dari '+f.by:'Foto';im.style.cssText='width:100%;max-height:70vh;object-fit:contain;border-radius:12px;background:var(--soft)';bx.appendChild(im)}
+ const cap=el('p','mute',(f.by?f.by+' · ':'')+new Date(f.t).toLocaleString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}));cap.style.margin='10px 0 0';bx.appendChild(cap);
+ const row=el('div','mrow');const cn=el('button','ref','Tutup');cn.type='button';const dl=el('a','go','Unduh');dl.href='https://drive.google.com/uc?export=download&id='+f.id;dl.target='_blank';dl.rel='noopener';dl.style.cssText='text-decoration:none;text-align:center;display:inline-flex;align-items:center;justify-content:center';
+ row.appendChild(cn);row.appendChild(dl);bx.appendChild(row);cn.onclick=()=>ov.remove();ov.onclick=e=>{if(e.target===ov)ov.remove()};document.body.appendChild(ov);
 }
 function drawCek(list,rooms,redraw){
  if(!A){list.appendChild(el('p','mute','Memuat absen...'));return}
