@@ -782,9 +782,7 @@ let GL=null,glBusy=false;
 function rGaleri(v){
  const up=el('div','card');up.style.padding='16px';
  up.appendChild(el('h2','','Unggah foto atau video'));
- const nm=el('input');nm.type='text';nm.placeholder='Nama Anda (opsional)';nm.setAttribute('aria-label','Nama Anda');nm.style.margin='10px 0';
- try{nm.value=localStorage.getItem('pn2name')||''}catch(e){}
- nm.oninput=()=>{try{localStorage.setItem('pn2name',nm.value)}catch(e){}};up.appendChild(nm);
+ const nm={value:''};
  const fi=el('input');fi.type='file';fi.accept='image/*,video/*';fi.multiple=true;fi.style.display='none';fi.setAttribute('aria-label','Pilih foto atau video');
  const pick=el('button','go','Pilih foto atau video');pick.type='button';pick.style.width='100%';pick.onclick=()=>fi.click();
  up.appendChild(pick);up.appendChild(fi);
