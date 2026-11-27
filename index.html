@@ -786,7 +786,7 @@ function rGaleri(v){
  const fi=el('input');fi.type='file';fi.accept='image/*,video/*';fi.multiple=true;fi.style.display='none';fi.setAttribute('aria-label','Pilih foto atau video');
  const pick=el('button','go','Pilih foto atau video');pick.type='button';pick.style.width='100%';pick.onclick=()=>fi.click();
  up.appendChild(pick);up.appendChild(fi);
- const st=el('p','mute','Foto dikecilkan otomatis. Video sampai 50 MB bisa diunggah di sini.');st.style.marginBottom='0';up.appendChild(st);
+ const st=el('p','mute','Foto dikecilkan otomatis. Video sampai 35 MB bisa diunggah di sini.');st.style.marginBottom='0';up.appendChild(st);
  const big=el('a','ref','Video besar? Unggah lewat folder Drive');big.href=GAL_URL;big.target='_blank';big.rel='noopener';big.style.cssText='display:block;text-align:center;margin-top:10px;text-decoration:none;padding:10px';up.appendChild(big);
  v.appendChild(up);
  const grid=el('div','');grid.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:16px';
@@ -820,7 +820,7 @@ function rGaleri(v){
    st.textContent='Mengunggah '+(n+1)+' dari '+list.length+'...';
    try{
     const f=await shrink(list[n]);
-    if(f.size>50*1024*1024){fail.push(list[n].name+' (lebih dari 50 MB)');continue}
+    if(f.size>35*1024*1024){fail.push(list[n].name+' (lebih dari 35 MB)');continue}
     await call('galeriUpload',{by:nm.value.trim(),filename:f.name,mime:f.type||'application/octet-stream',data:await toB64(f)});ok++;
    }catch(e){fail.push(list[n].name+' ('+errMsg(e)+')')}
   }
